@@ -20,7 +20,7 @@ const user = fetchUser();
 console.log(user); // ellie 
 ```
 
-→ 10초 이후에 아래의 코드들이 수행된다. 
+→ 10초 이후에 아래의 코드들이 수행된다!
 
 - **위의 코드를 Promise 처리**
 
