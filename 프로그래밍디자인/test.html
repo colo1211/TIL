@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>201710745 김경원</title>
+	<meta charset="UTF-8">
+	<script src="test.js"></script>
+</head>
+<body>
+	<h1>프로그래밍디자인수업</h1>
+	<h2>실습예제입니다</h2>
+	<hr>
+	<h4><input type="button" name="button" value="문제1번" onclick="Cal();">두 수를 입력받아 더하고 빼고 곱하고 나눈 결과를 출력합니다</h4>
+	<div id="result">정답영역입니다</div>
+	<hr>
+	<h4><input type="button" name="button" value="문제2번" onclick="Cal2();">두 수와 연산자를 입력받아 결과를 출력합니다</h4>
+	<div id="result2">정답영역입니다</div>
+	<input type="text" name="text" id="firstNum">
+	<select id="operand" onchange="Cal2();">
+		<option value="operand">연산자자선택</option>
+		<option value="hap">+</option>
+		<option value="cha">-</option>
+		<option value="gop">*</option>
+		<option value="bun">÷</option>
+	</select>
+	<input type="text" name="text" id="secondNum">
+	=
+	<input type="text" name="text" id="resultNum">
+	
+	<hr>
+	<h4><input type="button" name="button" value="문제4번" onclick="GuGuDan();">구구단을 출력합니다</h4>
+	<div id="result4">정답영역입니다</div>
+
+	<hr>
+	<h4><input type="button" name="button" value="문제5번" onclick="">사용자로부터 단을 입력받아 구구단을 출력합니다</h4>
+	<select id="gugudan" onchange="GuGuDan2();"> <!--변경되면 GUGUDAN2 함수 호출-->
+		<option value="gugudan">==단선택==</option>
+		<option value="2">2단</option>
+		<option value="3">3단</option>
+		<option value="4">4단</option>
+		<option value="5">5단</option>
+		<option value="6">6단</option>
+		<option value="7">7단</option>
+		<option value="8">8단</option>
+		<option value="9">9단</option>
+		
+	</select>
+	<div id="result5">정답영역입니다</div>
+
+	<hr>
+	<h4><input type="button" name="button" value="문제6번" onclick="Star();">별표의 개수와 방향을 결과를 출력합니다</h4>
+	<input type="text" name="text" id="StarNum">
+	<select id="star" onchange="Star();">
+		<option value="star">==정렬선택==</option>
+		<option value="left">왼쪽</option>
+		<option value="right">오른쪽</option>		
+	</select>
+	<div id="result6">정답영역입니다</div>
+
+</body>
+</html>
