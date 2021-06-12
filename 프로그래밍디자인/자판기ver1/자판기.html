@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript" src="vending.js"></script>
+    <link rel="stylesheet" type="text/css" href="vending.css">
+    <title>자판기예제</title>
+</head>
+<body>
+<h2 align="center">자판기 프로그램</h2>
+<hr>
+<h3>
+    투입금액
+    <input type="text" name="text" id="insertcoin" size="10">
+    <input type="button" name="button" value="투입" onclick="insert()">
+</h3>
+
+<table border="1">
+    <tr>
+        <td size="250"><img src="coffee.jpg" width="250"></td>
+        <td><img src="soda.jpg" width="250"></td>
+        <td><img src="water.jpg" width="250"></td>
+    </tr>
+    <tr>
+        <td align="center"><h4>캔커피 800원</h4></td>
+        <td align="center"><h4>소다 600원</h4></td>
+        <td align="center"><h4>생수 500원</h4></td>
+    </tr>
+    <tr>
+        <td align="center">
+            수량
+            <input type="text" name="text" id="coffeenum" size="5">개
+        </td>
+        <td align="center">
+            수량
+            <input type="text" name="text" id="sodanum" size="5">개
+        </td>
+        <td align="center">
+            수량
+            <input type="text" name="text" id="waternum" size="5">개
+        </td>
+    </tr>
+<!--    <tr height="30">-->
+<!--        <td align="center" id="cancoffeestock" class="stock">재고 10개</td>-->
+<!--        <td align="center" id="sodastock" class="stock">재고 10개</td>-->
+<!--        <td align="center" id="waterstock" class="stock">재고 10개</td>-->
+<!--    </tr>-->
+    <tr>
+        <td align="center">
+            <input type="button" name="button" value="구입하기" onclick="pay(1,800)">개
+        </td>
+        <td align="center">
+            <input type="button" name="button" value="구입하기" onclick="pay(2,600)">개
+        </td>
+        <td align="center">
+            <input type="button" name="button" value="구입하기" onclick="pay(3,500)">개
+        </td>
+    </tr>
+    <tr>
+        <td align="center" id="coffeestate" class="state">판매중</td>
+        <td align="center" id="sodastate" class="state">판매중</td>
+        <td align="center" id="waterstate" class="state">판매중</td>
+    </tr>
+</table>
+
+<br>
+<hr>
+<div id="restcoin">현재 잔고는 000원 입니다.</div>
+<!--잔고 띄우는 영역-->
+<hr>
+<div id="order"></div>
+<!--투입 금액 나오는 부분-->
+<hr>
+<div id="result"></div>
+<!--빨간 글씨로 계산과 거스름 돈 출력-->
+</body>
+</html>
