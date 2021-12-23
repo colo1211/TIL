@@ -1,0 +1,43 @@
+Node.js : JS를 브라우저 밖에서 실행해주게 하는 실행기 
+Express.js : Node.js 를 쉽게 이용할 수 있게 해주는 프레임워크
+
+Node.js 가 다운되어 있는지 확인 및 boiler-plate 폴더 생성
+> node -v
+> cd Desktop
+> mkdir boiler-plate
+> npm init 
+
+> npm init 을 통해 pakage.json 파일이 자동으로 생성이 된다. 
+백엔드 서버를 시작하기 위해서 index.js 파일을 생성한다. (백엔드 시작점) 
+
+> npm install express --save
+1. --save 를 하게 되면 pakage.json 파일의 dependencies 에 express의 다운된 버전을 뜨게 만들어 준다. 
+2. node_modules 폴더가 생성된다. 우리가 이 파일을 만질 일은 없다. 
+
+https://expressjs.com/en/starter/hello-world.html (express.js 공식 사이트) 에 들어가서
+
+````
+const express = require('express') // 다운받았던 모듈을 가져온다.  
+const app = express() // 새로운 express App을 만든다. 
+const port = 5000 // port 는 아무 숫자나 가능
+
+app.get('/', (req, res) => { // Root Directory
+  res.send('Hello World!HI!!!!')
+})
+
+app.listen(port, () => { // 5000번 port 에서 해당 앱을 실행
+  console.log(`Example app listening at http://localhost:${port}`)
+})
+````
+를 index.js에 복붙한다. 
+
+[ index.js 실행 방법 ] 
+1. cmd 창에 node index.js 입력 
+2. [pakage.json] 파일에 
+"start" : "node index.js" 를 추가하여 해당 명령어를 축약하여 npm run start로 명령하게 한다. 
+
+ex) 
+"scripts": {
+    "start" : "node index.js", 
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }

@@ -1,0 +1,81 @@
+⭐ Mongo DB Connect
+
+[순서] 
+1. MongoDB 가입하기 
+2. Clusters 생성 (5-7분 소요)
+3. MongoDB 유저 생성 : Connect 버튼 클릭
+-> UserName 과 Password 는 반드시 기억해둬야 함
+
+mongodb+srv://color961211:<password>@boilerplate.skcs6.mongodb.net/myFirstDatabase?retryWrites=true&w=majority 
+를 index.js 파일에 붙여넣기
+
+4. Mongoose : 몽고DB를 편하게 쓸수 있는 객체모형툴을 설치
+> npm install mongoose --save 
+
+-> pakage.json에 추가됨을 확인 할 수 있다. 
+"dependencies": {
+    "express": "^4.17.1",
+    "mongoose": "^6.0.4"
+  }
+
+5. [ index.js ] 에 mongoose를 require 해온 이후, 아까 복붙해온 내용을 비밀번호를 입력한 이후 사용
+const mongoose = require('mongoose');
+mongoose.connect('mongodb+srv://color961211:[내 비번]@boilerplate.skcs6.mongodb.net/myFirstDatabase?retryWrites=true&w=majority').then(()=>{console.log('MongoDB Connected..')}).catch((e)=>console.log(e))
+
+6. 'MongoDB Connected..' 가 나오면 MongoDB 연결 성공
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+⭐ MongoDB 유저 모델 생성
+> 회원가입을 진행할 때 유저들의 정보를 설정하기 위해서 유저모델(유저 Schema)을 설정해야 한다. 
+ 
+Model? Schema? 
+
+- Model : 스키마를 감싸주는 역할 ex) 회원
+- Schema : 하나하나의 정보들을 지정해주는 역할 ex) 이름 : { type : string, maxlength : 50 }, 설명 : { type:string, maxlength : 100 }
+
+[Models/User.js] 
+
+````
+// Model 파일에 User.js 에 mongoose를 import 해온다. 
+
+const mongoose = require('mongoose');
+
+// 우선 userSchema 를 생성한다. 
+const userSchema = mongoose.Schema({
+    name : {
+        type : String, 
+        maxlength : 50
+    },
+    email :{
+        type : String, 
+        trim : true, // 공백 자동 제거  
+        unique : 1, // 중복 X 
+    },
+    password : {
+        type : String, 
+        minlength : 5
+    }, 
+    lastaname : {
+        maxlength : 50, 
+        type : String
+    },
+    role : { // 1이면 관리자, 0이면 일반 사용자 
+        type : Number ,
+        default : 0
+    },
+    image : String, 
+    token : {
+        type : String
+    }, 
+    tokenExp : { // 토큰 유효기간 설정
+        type : Number
+    }
+})
+
+// 생성한 유저스키마를 'User'에 넣어서 User 모델을 생성한다.
+const User = mongoose.model('User', userSchema); 
+
+// User Model 을 export 한다. 
+module.exports = {User}
+````
