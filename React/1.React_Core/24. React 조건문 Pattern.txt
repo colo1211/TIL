@@ -1,0 +1,107 @@
+리액트 조건문 패턴 
+: 리액트 컴포넌트의 return ( ) 내부는 JSX를 작성하는 공간이다. 
+따라서 JSX 내부에서는 JS 문법을 사용하지 못한다. 
+하지만 JSX 내부에서 조건문을 사용하고 싶을 때가 가끔씩 있는데 이를 어떻게 해결하는지 조건문 패턴에 대해서 알아본다. 
+
+function App(){
+   return (
+      // JSX를 작성하는 무궁무진한 공간
+   )
+}
+
+1. App 컴포넌트의 JSX 영역이 아닌 if/else 를 쓰기 위한 컴포넌트를 따로 만든다. 
+
+function Com(){
+   if ( true ) {
+ 	return <p> 참이면 이거 보여줘 </p> ;
+   }
+   else {
+	return null ; 
+   } 
+}
+
+2. App 컴포넌트의 JSX 영역에서 편법으로 작성하는 방법 
+=> '삼항 연산자'
+JSX 영역에서
+{
+ // JS 문법을 간단히 작성이 가능  
+}
+중괄호를 치게되면 JS 문법을 간단히 작성이 가능하다. 
+단, if 문과 for 문은 작성하지 못한다. 
+
+if 문은 삼항연산자로 대체해서 사용하고 for문은 .map 혹은 .forEach로 대체해서 사용한다. 
+
+[삼항연산자] 
+{
+    조건문
+    ? <p> true일땐 이거 출력 </p> // true
+    :  null // false
+}
+
+3. && 연산자 활용하기 
+
+왼쪽) 조건 && 오른쪽) 출력할 HTML 
+
+예시) 
+true && '안녕' -> '안녕' 을 출력
+false && '안녕' -> 'false' 를 출력
+
+이를 활용하면 조건문과 유사하게 사용이 가능하다. 
+{
+     true && <p>참이면 출력 </p> 
+}
+
+{
+     false && <p> 거짓 </p> 
+}
+
+만약 false 면 HTML로 렌더링 되지 않는다. 
+
+4. Redux reducer 함수에서 액션.type 를 케이스별로 수정사항을 작성할 때
+=> switch 문을 작성
+
+switch ( 액션.type ){
+    case '수량증가' :
+	return new_state;     
+    case '수량감소' : 
+	return new_state; 
+    default : 
+	return state; 
+}
+
+5. enum 
+: 마지막에 object{} 뒤에 [] 대괄호를 붙여서 key값이 현재상태인 자료를 뽑겠습니다
+function Component() {
+  var 현재상태 = 'info';
+  return (
+    <div>
+      {
+        { 
+           info : <p>상품정보</p>,
+           shipping : <p>배송관련</p>,
+           refund : <p>환불약관</p>
+        }[현재상태]
+      }
+
+    </div>
+  )
+} 
+
+객체를 변수로 빼서, 
+
+var 탭UI = { 
+  info : <p>상품정보</p>,
+  shipping : <p>배송관련</p>,
+  refund : <p>환불약관</p>
+}
+
+function Component() {
+  var 현재상태 = 'info';
+  return (
+    <div>
+      {
+        탭UI[현재상태]
+      }
+    </div>
+  )
+} 

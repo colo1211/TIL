@@ -1,0 +1,72 @@
+function App() {
+  return (
+    <div className="App">
+	{/* HTML 코드를 짤 영역 */}       
+    </div>
+  );
+}
+
+
+JSX : HTML처럼 생긴 대용 문법
+
+JSX 기억해야 할 점 
+
+[1. class -> className]
+: JS 에서는 Class가 예약된 단어이기 때문에 Camel 작명법으로 className으로 명명한다.    
+App.js 맨 위에 import './App.css'; 를 통해서 App.css를 import하였다.
+그럼 CSS 스타일링은 어디서?
+=> App.css
+
+
+[2. 리액트에서 [데이터 바인딩]이 매우 쉬워진다.] 
+{ 변수명 } 을 통해서 빠른 렌더링이 가능해진다. 
+쉽게 말해서, 이제 getElementById 이런거 안써도 매우 쉽게 자료를 변경 가능하다. 
+심지어 className={ 변수명 } 도 가능.
+
+ex1. 변수
+function App() {
+
+  let post = `용인 맛집`;
+  return (
+    <div className="App">
+          <div className='black-nav'>
+            <div>My Dev-blog</div>
+          </div>
+          <h4>{post}</h4>
+    </div>
+  );
+}
+
+ex2. 함수
+더해서 함수도 중괄호 내에 기입이 가능하다. 
+function App() {
+
+  let post = `용인시 성당`;
+
+  function 함수(){
+    return 100;
+  }
+
+  return (
+    <div className="App">
+          <div className='black-nav'>
+            <div>My Dev-blog</div>
+          </div>
+          <h4>{함수()}</h4>
+    </div>
+  );
+}
+
+ex3. 이미지 첨부 방법
+{ logo } 
+import logo from './logo.svg';
+같은 폴더 내에 있는 svg 이미지를 import하여서 바로 넣어준다. 
+<img src = { logo } >
+
+
+[3. JSX 에서 태그에 style 속성을 집어 넣을 때 객체 형식으로 넣어주어야 한다.]
+Tip : 변수로 치환이 가능하다.
+근데 귀찮으니 그냥 className 부여해서 Css 에서 스타일링 하자.
+<태그 style = {{fontSize : '15px', color : 'skyblue'}}> </태그>
+ <div style={{fontSize : '15px',color : 'skyblue'}}>My Dev-blog</div>
+ 

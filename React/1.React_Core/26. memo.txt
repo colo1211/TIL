@@ -1,0 +1,73 @@
+memo 함수 
+memorize : props를 기억해둬서 변경되는지 안되는지 보겠다. 
+: 불필요한 재렌더링을 막아주는 memo 
+⭐ props가 변경이 안된 컴포넌트는 재렌더링을 하지 말아달라. 
+(props가 변경된 컴포넌트에 한해서만 재렌더링을 실시하라) 
+
+> 컴포넌트 재렌더링은 굉장히 흔한 일임
+⭐⭐⭐⭐⭐ 컴포넌트에 있는 props 나 state가 변경되면 그거를 쓰는 HTML 들은 전부 재렌더링이 된다. 
+
+[사용 방법]
+1. import { memo } from 'react' ; 
+2. 컴포넌트를 memo( ) 함수 안에다가 싸매면 된다. 
+3. let 컴포넌트명 = memo(function () {
+	return ~~~; 
+});  
+ 
+memo( )의 단점 
+: 기존 props 와 바뀐 props를 비교연산 후, 컴포넌트를 업데이트 할지 말지 결정한다. 
+> 사이트가 느려질 수 있음. 
+
+예시 코드
+
+import { memo } from 'react' ;
+
+function Cart(props){
+    let 이름 = '김경원' ; 
+    let 나이 = 26; 
+
+    return (
+	<div>
+	    <Parents 이름={이름} 나이={나이}/>
+	 </div>
+    )
+}
+
+
+// 컴포넌트를 다음과 같이 선언하였다. 
+function Parents(props){
+    return (
+        <div>
+            <Child1 이름={props.이름}></Child1>
+            <Child2 나이={props.나이}></Child2>
+        </div>
+    )
+}
+
+let Child1 = memo(function(props){
+    useEffect(()=>{
+        console.log('1번째 props가 변경된거 같아서 재렌더링함');
+    })
+    return(
+        <div>{props.이름}</div>
+    )
+})
+
+let Child2 = memo(function(props){
+    useEffect(()=>{
+        console.log('2번째 props가 변경된거 같아서 재렌더링함'); 
+    })
+    return (
+        <div>{props.나이}</div> 
+    )
+})
+
+ 이제 리액트 개발자 도구에 들어가서 props를 변경해보면
+변경한 props에 대한 값들만 변경되어서 console 창에 몇번째 props가 변경된 것 같다는 콘솔창 출력을 확인 할 수 있다. 
+
+
+⭐⭐⭐⭐⭐ 컴포넌트에 있는 props 나 state가 변경되면 그거를 쓰는 HTML 들은 전부 재렌더링이 된다. 
+⭐⭐⭐⭐⭐ memo 로 감싼 함수는 기존의 값을 기억하고 있다가 props 혹은 state 가 변경되면
+해당 요소를 재렌더링을 실시한다. 
+
+

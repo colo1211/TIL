@@ -1,0 +1,65 @@
+React props 
+: 부모 컴포넌트가 가진 state 를 자식 컴포넌트에서도 사용 할 수 있게 해주는 역할
+
+[props]
+예제 코드에서 부모 컴포넌트( App(){} )내에서 선언한 state를 
+자식 컴포넌트 ( Modal ) 내에서 사용하고 싶다면  state 데이터를 전송을 해야 
+자식 컴포넌트에서 state를 사용 가능하다. 
+* 자식컴포넌트는 부모컴포넌트가 가진 state 를 사용하려면 props로 전송을 해줘야 사용할 수 있음
+
+
+[props 를 활용하여 자식컴포넌트에서 state 를 전달해 주는 법]
+
+1. App.js 에서 호출한 자식 컴포넌트(Modal)에서 
+<자식컴포넌트 작명= {전송할 state} /> 
+
+ex) 
+{
+             modal === true
+             ? <Modal 글제목={글제목}></Modal> // true일때 Modal 창을 띄운다. 
+             : null  // false 일때 Modal 창을 닫는다. 
+           }
+
+2. 자식컴포넌트에서 props 파라미터 입력 후 사용한다.
+- 우선 파라미터로 props를 받아온다. 
+- 적용 할 곳에 state를 { props.state명} 으로 입력해 준다.  
+=> { props.글제목 }
+
+ex)
+function Modal(props){
+  return (
+    <div className='modal'>
+    <h3> 제목 {props.글제목}</h3>
+    <p> 상세내역 </p>
+    <p> 날짜 </p>
+    <button>Close</button>
+  </div>
+  )
+}
+
+
+[여러가지 props를 전달하는 방법] : 특별한거 없음, 그냥 옆에다가 늘여서 똑같이 쓰면 됨
+<Modal 글제목 = {글제목} 누른번호 = {누른번호} modal변경={modal변경}></Modal>
+
+
+[Props 를 활용하여 누른 제목에 따라 모달창이 바뀌는 UI를 개발하는 방법]
+
+1. 현재 사용자가 클릭한 제목 번호를 저장하는 state를 하나 만들어 준다. 
+Tip ! state는 UI의 현재상태를 보관하는 저장소 역할
+
+2. 해당 제목을 클릭하면 onClick 을 통해서 해당 번호를 변경하는 state 함수를 통해 state 값을 변경
+ex) map 의 index를 통해서 해결
+글제목.map((value,index)=>{
+              return (
+                <div className='list' onClick={ ()=>{ modal변경(true)} }>
+                <h3 onClick={ ()=>{ 누른번호변경(index) } }> {value} <span className='like-hand' onClick={ ()=>{ 좋아요추가(index)}}>👍</span> { 좋아요[index] } </h3>
+                <p> 12월 11일 작성</p>
+                <hr/>
+            </div>
+              );
+            })
+          }
+
+3. 자식 Component에서 { props.글제목[ props.누른번호 ] }
+
+

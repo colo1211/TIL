@@ -1,0 +1,47 @@
+⭐ localstorage
+: DB 없이 데이터를 저장하고 싶을 때
+
+장바구니에 상품을 추가해도 새로고침 혹은 재접속을 하게 되면 모든 자료가 초기화 된다. 
+왜냐하면 새로고침을 하게 되면 JS파일은 위에서부터 아래로 처음부터 다시 읽히기 때문이다. 
+
+새로고침해도 state 데이터를 기억하게 하려면? 
+1. 서버로 보내서 DB에 저장한다. 
+2. 브라우저 임시 저장 공간에 저장한다. 
+
+임시저장공간(비밀 공간, 반영구적 저장) => ⭐localStorage
+
+[접속하는 방법] 
+1. 크롬 개발자 도구 
+2. 메뉴 중 Application 입장
+3. Storage > Local Storage 클릭 후 http://localhost:3000 클릭
+⭐ Loacl Storage : 브라우저 청소를 하지 않는 이상 남아있는다. 순전히 텍스트만 저장 가능
+⭐ Session Storage : 브라우저를 끄면 데이터가 날라간다. 
+4. Key : Value 데이터를 저장할 수 있는 공간이 나온다.  
+
+
+이를 이용해서 [최근 본 상품] 을 개발해본다. 
+
+⭐ localStorage 문법 3개 
+1. 자료 저장
+localStorage.setItem('name','Kim') 
+> localStorage(임시 DB)에 아이템을 넣는다. 
+
+2. 자료 출력 
+localStorage.getItem('name')
+> localStorage에서 아이템을 가져온다.  // 'kim' 
+
+3. 자료 삭제
+localStorage.removeItem('name')
+
+* localStorage 에 object 자료를 저장하면 깨진다. 
+왜냐하면 localStorage는 문자형만 저장하기 때문이다. 
+
+⭐ 따라서 localStorage에 object 자료를 저장하기 위해서는 object를 문자형으로 변환해서 글자처럼 만들어서 넣는다. 
+이를 JSON을 활용하여 시행한다. 
+
+JSON : 유사 Object 'key' : 'value' 
+넣을 때 : JSON.stringify( )
+뺄 때 : JSON.parse( )   
+
+
+

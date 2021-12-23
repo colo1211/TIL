@@ -1,0 +1,62 @@
+⭐ Redux 5 (최종) 
+
+[ redux 쓰는 이유 ] 
+1. 모든 컴포넌트가 props 전송 없이 state를 직접 사용 가능
+(전역 state 라고 생각하면 편함) 
+
+2. state 수정 및 관리가 용이하다. 
+dispatch 를 통해서 수정 요청을 진행한다. 만약 에러가 난다면 
+state 내부에 있는 reducer 함수 부분만 체크하면 확인이 가능하다. 
+
+[ redux 쓰는 방법 ] 
+⭐ state 생성법 
+let 자료 = [{ ... }];
+function reducer( state = 자료, 액션){
+   if(액션.type === ' '){
+	return '수정된 state';
+   }
+   return state; 
+}
+
+let store = createStore(reducer);  // 이제 store에 등록한 이후 store를 state로 사용 가능
+
+[index.js] 
+<Provider store = {store}> 
+    <App/>
+</Provider> 
+이제 모든 컴포넌트에서 store 를 사용 가능 
+
+⭐ state 사용법 
+사용하고자 하는 컴포넌트 위치가 Detail이라면 
+
+1. 연결
+export default connect(state를props화)(Detail);
+
+2. 전역 state를 해당 컴포넌트의 props로 가져오는 함수를 작성
+function state를props화 (state){
+      return {
+	state : state.reducer
+      }
+} 
+
+3. function Detail (props){
+       {props.state}
+}
+
+⭐⭐⭐⭐⭐ 하지만 전역 state를 해당 컴포넌트의 props를 가져오는 방법보다 
+state를 꺼내쓰는 더 쉬운 방법이 존재한다. 
+
+⚠ 먼저, export default connect(state를props화)(Cart);
+코드를 export default Cart; 로 수정한다. 
+
+[ useSelector() / useDispatch() ]
+: Redux Store 에 존재하는 state들을 조금 더 쉽게 가져 올 수 있는 Hook 
+
+useSelector : state를 꺼내오는 더 쉬운 방법
+let state = useSelector ((state)=>{ return state}); 
+console.log(state); 
+// reducer, reducer2 가 객체형식으로 state 변수에 담겨있다. 
+
+따라서, state.reducer/ state.reducer2 와 같이 사용할 수 있다. 
+let dispatch = useDispatch(); 
+dispatch({type : '수량감소'}); 

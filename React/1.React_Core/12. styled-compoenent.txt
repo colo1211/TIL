@@ -1,0 +1,49 @@
+styled-components(스타일 컴포넌트)
+: CSS 를 짜기 난감한 경우 사용
+-> CSS를 미리 입혀놓은 컴포넌트
+ex) Component 가 많아지면 CSS 를 작성하기 힘들어진다. 
+
+Component 를 다른 파일에 작성하면 100개가 넘어가는 경우도 종종 있다. 
+
+Class명 중복으로 만들어놓는 실수를 방지 가능
+
+장점 
+: 클래스명을 선언할 일이 없어서 많은 컴포넌트를 선언하였을 때 class 명이 겹칠일이 줄어든다. 
+사실은 CSS를 모듈화 해놓으면 충분히 해결될 일
+
+단점
+: 근데 난 이거 왜 써야 하는지 잘 모르겠다. 
+
+
+따라서 class 선언 없이 컴포넌트에 CSS를 직접 장착시키는 것이 바로 
+✔ styled-components 이다. 
+class 선언 없이 컴포넌트에 CSS를 직접 장착하는 것 (CSS in JS 라고도 함)
+
+[설치 방법]
+1. 터미널에서 npm install styled-components
+2. 사용하고자 하는 파일에 와서 import styled from 'styled-components';
+3. 컴포넌트에 직접 스타일을 넣어서 스타일링 하기
+
+[사용 방법]
+1. 컴포넌트를 만든다는 느낌으로 메인 컴포넌트 밖에서 작성
+
+2. let 변수명 = styled.태그명` 
+       CSS 스타일링 
+`; 
+ex) let 박스 = styled.div` 
+    padding : 20px; 
+`;
+
+3. 적용하고 싶은 곳으로 와서 
+<박스> </박스> 
+
+[비슷한 UI를 더 쓰고 싶은 경우]
+1. 스타일드 컴포넌트를 선언할 때 ${ props 문법 } 을 활용하자 
+let 제목 = styled.h4`
+  padding-top : 8px; 
+  font-size : 30px;
+  color : ${ props => props.색상 }
+`;
+
+2. 적용할 때 props 를 전달한다.  
+<제목 색상={ 'red' }> </제목>

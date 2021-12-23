@@ -1,0 +1,73 @@
+styled-conponent를 쓸지, SASS 를 쓸지는 개발자 선택
+하지만 나는 SASS가 훨씬 편하다....
+
+[ SASS ]
+: CSS를 프로그래밍 언어스럽게 작성 가능한 전처리엔진
+
+* 브라우저는 SASS 문법을 모른다. 
+SASS(브라우저가 인식 X)  => CSS (브라우저가 인식 O)
+	중간에 변환 해 주는 역할 : node-sass
+
+[ 설치 ]
+1. npm install  node-sass
+2. 같은 폴더 내에 .scss 파일을 만든다. 
+3. CSS 적용을 원하는 JS 파일 내에서import './Detail.scss';
+을 해온다.  
+
+[ SASS 문법 5가지 ]
+변수($) , @import, Nesting, @extend, @mixin <-> @include  
+
+1. 변수에 데이터를 저장 가능 ($) 
+$변수명 : 변수에 넣을 값
+ex) 
+$메인색상 : green; 
+.my-detail{
+    color :$메인색상;
+}
+
+2. @import './파일 경로' 
+: CSS nomalize 혹은 reset 파일들을 위에 적는 것들이 아닌 위에서 
+단순하게 @import 해온다. 
+
+3. Nesting : 셀렉터 대신 쓰는 문법 
+container 내에 존재하는 h4 태그와 p 태그에 스타일링
+div.container{
+    h4{
+        color : orchid;
+    }
+    p{
+        color : green; 
+    }
+}
+
+4. 클래스를 템플화 할 때, 각기 다른 색상의 UI가 필요할 때? 
+@extend 클래스명
+ex)
+.my-alert{
+    padding : 50px; 
+    background-color: #eee;
+    border-radius: 5px;
+    max-width : 500px; 
+    margin:auto; 
+    width : 100%; 
+}
+
+.my-alert2{
+    @extend .my-alert; 
+    // 기존에 있던 .my-alert 의 UI를 그대로 받아오고
+    background-color : red; 
+    // 색상을 red로 변경한다. 
+}
+
+5. 클래스를 함수화하기 
+@mixin <-> @include 함수명( red ); 
+
+ex) 
+@mixin 함수명( $색상 ){
+padding : 50px; 
+    background-color: $색상;
+    border-radius: 5px;
+    max-width : 500px; 
+    margin:auto; 
+    width : 100%; 
+} 

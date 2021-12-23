@@ -1,0 +1,27 @@
+import/export
+데이터가 너무 길면 다른 파일로 잘라내어서 끌어와서 사용 할 수 있다. 
+파일을 쪼갤떄 활용하는 방법이다. 
+
+방법 
+1. src 폴더 내에 XXX.js 파일을 생성
+
+2. export (내보내기) 
+XXX.js 내에서 
+ export default 변수명 or 함수명 or [
+      가져올 데이터들을 바로 적어버린다. 
+]
+
+Tip : export default 
+- 파일 하나에서 딱 한번만 사용 가능
+- 파일의 맨 아래에 적용 가능\
+
+- 만약 여러 개의 변수를 한번에 내보내기 위해서는 
+export { 변수1, 변수2 }
+
+3. import (가져오기) 
+App.js 내에서 
+import 변수명 from './XXX.js'; 
+
+[이미지 파일 컴포넌트에서 변수 사용하기]
+=> {  } 안에다가 이미지를 주소를 작성하기 
+<img src={'이미지파일/shoes'+ (props.index+1) +'.jpg'}/> 

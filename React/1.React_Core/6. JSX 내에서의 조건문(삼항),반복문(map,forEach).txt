@@ -1,0 +1,39 @@
+리액트에서는 HTML도 반복문으로 반복시킬 수 있다. 
+
+[map 함수]
+* arr 이란 배열의 길이만큼 반복해준다. 
+
+arr.map((value, index)=>{
+      return (
+	각각의 value에 적용시킬 연산
+	ex) value * 2; 
+)
+})
+
+* map 함수는 ES6 에 새로 추가된 문법이므로 새로운 배열에 담아줘야 한다. 
+-> 원래의 값을 바꾸지는 않는다.
+
+* JSX 내 (App 함수 내의 return 내부의)에서 JS 문법을 사용하기 위해서는 
+중괄호로 감싼 이후에 작성하여야 한다. 
+
+ex) 변수, 함수
+if와 for문은 사용할 수 없다. 
+대신 대체재로 다음을 사용한다. 
+if X -> 삼항연산자,  for X -> map()함수 혹은 forEach() 
+
+[App 함수 내의 return 내부의 JSX 내에서 HTML을 반복시키기 위한 템플릿]
+{
+            글제목.map((value,index)=>{
+              return (
+                <div className='list' key = {index} onClick={ ()=>{ modal변경(true)} }>
+                <h3> {value} <span className='like-hand' onClick={ ()=>{ 좋아요추가(index)}}>👍</span> { 좋아요[index] } </h3>
+                <p> 12월 11일 작성</p>
+                <hr/>
+            </div>
+              );
+            })
+}
+
+참고) 
+map 으로 JSX를 반복문을 돌리면 WARNING 이 뜹니다. (작동은 잘 됨)
+map 반복문으로 돌린 HTML 에 key={ index } 를 추가해 주면 WARNING 이 사라집니다. 

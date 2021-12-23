@@ -1,0 +1,36 @@
+React 에서 사용자의 input을 받는 방법
+
+HTML : <input> 
+JSX of React : <input></input> or <input/>
+
+이전에 jQuery 을 배울 때
+input의 이벤트 리스너  
+1. input : 한 글자라도 입력되면 바로 실행
+2. change : 입력 후에 focus를 잃었을 때 바로 실행 
+
+=> 하지만, React에서는 입력을 할때 마다 이벤트가 실행되는 것으로
+onInput과 onChange가 동일한 역할을 한다. 
+
+[input에 입력한 값을 사용하는 방법]
+사용자가 입력한 값을 가져오는 방법 'e.target.value'
+<input onChange={ (e)=>{ console.log(e.target.value) }} />
+=> 변경될 때 마다 입력된 값이 콘솔창에 출력 되는 것을 볼 수 있다
+
+[사용자가 input에 입력한 값을 state로 저장해보기]
+let [입력값, 입력값변경] = useState(''); 
+<input onChange={ (e)=>{ 입력값변경(e.target.value) }} />
+
+[글 발행 기능 만들기] 
+1. 사용자가 입력한 글을 state 변경함수를 통해서 입력값 state에 저장하기
+=> e.target.value 를 사용하여 입력한 글을 가져 올 수 있다. 
+
+let [글제목, 글제목변경] = useState(['수원시맛집','강남카페거리','하동녹차관광지']);
+let [입력값, 입력값변경] = useState(''); 
+<input className='input-submit' onInput={ (e)=>{ 입력값변경(e.target.value) } }/>
+
+2. 입력값 state에 저장된 값을 글제목 state 변경함수를 사용하여 글제목에 저장하기
+<button className='my-btn' onClick={ ()=>{ 
+     let temp = [ ...글제목 ]; // 최대한 state 원본은 안건드는게 좋음
+     temp.unshift(입력값);
+     글제목변경(temp);
+  } }> Submit </button>

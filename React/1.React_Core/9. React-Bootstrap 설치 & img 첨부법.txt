@@ -1,0 +1,30 @@
+[yarn] 
+: npm 대신에 사용 할 수 있는 설치환경
+* 안정적이고 빠르게 설치가 가능
+
+[React 내에서 Bootstrap 설치 방법]
+1. https://react-bootstrap.github.io/ 접속
+2. Get start 누른 후 npm install react-bootstrap@next bootstrap@5.0.2 을 터미널에 입력한다. 
+
+주의사항!
+현재 실행하고 있는 폴더로 이동해서 해당 npm install 명령어를 입력한다. 
+3. index.html 파일에다가 <link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+  integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+  crossorigin="anonymous"
+/> 를 복사 붙여넣기 한다. 
+
+4. 쓰고자 하는 컴포넌트에 대해서 import 해온다. (용량 절약을 위해서 이렇게 만들었다고 함)
+쓰고자 하는 컴포넌트의 반드시 첫글자를 대문자로 import 해와야 한다. 
+* 원하는 컴포넌트를 사용하기 위해서는 해당 컴포넌트의 첫글자를 대문자로 import해와야 한다. 
+반드시 대문자로 가져와야 한다. 
+ex) import { Button, Navbar } from 'react-bootstrap';
+
+[이미지 파일을 리액트 파일에서 사용하기] 
+1. img 파일을 src 폴더에 넣기 -> file 들이 압축이 된다.  import 를 사용한다. 
+import { 이미지1 } from './shoes1.jpg';
+<img src = { 이미지1 } />
+
+2. img 파일을 public 폴더에 넣기 -> 파일이 변경되지 않고 보존된다.  상대경로사용(HTML에서 첨부하던 대로 방법 동일하게 가능)
+<img src='이미지파일/shoes1.jpg'/>

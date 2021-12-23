@@ -1,0 +1,36 @@
+⭐ Redux 4
+Redux 를 통해서 state를 수정하는 법을 그동안 배워왔음 
+function reducer( ) <-> dispatch({ })
+
+✔ reducer(원래 state, 액션) : state 수정을 위한 함수를 자체 제작하는 함수 
+✔ props.dispatch ({ type : ' ' }); : state 수정을 위해서 호출하는 방법
+
+⭐⭐⭐ dispatch()로 수정을 요청할 때 reducer에게 데이터를 보낼 수도 있다. 
+=> payload : { key : 'vaue' } 를 통해서 전달이 가능하다. 
+payload 뜻 : 화물
+
+결론.  
+= dispatch({  type : ' 수정을 정의한 문장 ' , payload : { 보낼 데이터 key : '보낼 데이터 value'} })
+으로 하게되면 
+보낸 자료는 redux store의 ✔[액션] 파라미터에 데이터가 저장된다.
+
+
+[ 실습 ]
+Detail.js 에서 주문하기를 클릭하면 장바구니에서 항목이 추가되는 것을 구현해보자
+
+[Detail.js]
+<button className="btn btn-danger btn-layout" onClick={()=>{
+            props.dispatch({ type : '장바구니추가', payload : { id : `${(props.state.length)}`, name : `${찾은상품.title}`, quan : 1}})
+            history.push('/cart');
+ }}>주문하기</button> 
+
+[Redux , reducer함수]
+function reducer(초기값 = 데이터, 액션){
+  if (액션.type === '장바구니추가'){
+    let copy = [...초기값];
+    copy.push(액션.payload); 
+    return copy; 
+  }
+}
+
+⭐ 액션.payload 에 보낸 데이터가 state로 담기게 된다. 

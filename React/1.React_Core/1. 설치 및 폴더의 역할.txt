@@ -1,0 +1,39 @@
+모바일 App 처럼 스무스하게 동작하는 웹들, 새로고침 없이 웹 탐색이 가능 => 웹앱(web-app)
+이런 웹앱을 만들 때 유용하게 사용 할 수 있는 라이브러리 -> 리액트, 뷰, 앵귤러
+
+[장점] 
+1. 모바일 앱으로 발행이 쉬움 ex) PWA, React-native
+2. 앱과 유사한 UI/UX
+
+
+[설치]
+1. node.js를 설치 => 'npx/npm을 사용하기 위해' 
+
+2. 터미널에서 [npx create-react-app 프로젝트명] 
+
+* npx : 라이브러리 설치 도와주는 명령어
+* create-react-app : 리액트 셋팅이 다 된 boilerplate, 만들기 쉽게 도와주는 라이브러리
+
+Success! 가 나오면 설치 완료
+
+다 설치 되고 나면 폴더>src>App.js 가 코드를 짤 메인 페이지
+
+[실행]
+1. 터미널에서 아까 생성한 프로젝트 명으로 이동
+2. [npm start]
+
+[폴더 역할]
+
+[src 폴더 : 실질적 소스코드 보관함]
+App.js는 메인페이지에 들어갈 HTML을 짜는 곳
+실제 메인페이지는 public>index.html 에 있음
+
+App.js에 작성한 내용을 index.html의 #root에 모두 박아 넣는 개념이다. 
+(박아 넣는 역할은 index.js에서 중간 다리 역할을 한다. document.getElementById('root') )
+
+[node_modules : 라이브러리를 모두 모아놓은 폴더]
+
+[public : static 파일들을 보관하는 폴더 ex) favicon]
+
+[package.json : 설치한 라이브러리를 모두 모아주는 목록, 자동 기입됨]
+

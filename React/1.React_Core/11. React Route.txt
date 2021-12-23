@@ -1,0 +1,156 @@
+[React Router]
+: 페이지 나누기(라우팅)
+=>react-router-dom 라이브러리를 이용한다. 
+
+React Router 특징 
+비록 다른 URL을 입력할 때 다른 페이지가 뜨지만
+페이지 마다 다른 HTML 파일이 아니다. 
+index.html 하나만 있는 것임
+HTML 내부의 내용을 URL path에 맞게 갈아치워줘서 다른 페이지 처럼
+보여주는 것
+
+[사용 방법 및 초기 세팅법]
+1. 터미널에 npm install react-router-dom 를 입력하여 설치한다. 
+2. index.js 파일에 들어가서
+import {BrowserRouter} from 'react-router-dom';
+
+참고 : import from './경로'; import from ' '; 
+-> ./가 없는 것은 보통 라이브러리
+
+3. index.js에서 
+<BrowserRouter>
+  <App />
+</BrowserRouter>
+
+<App /> 을 BrowserRouter 태그로 감싼다. 
+
+4. App.js 페이지에서 Switch, Link, Router (SLR, 스르륵)를 import 해온다. 
+import { Router, Link, Switch } from 'react-router-dom';
+
+5. App.js 파일 내에서  Route 태그를 활용하여 경로를 지정한다. 
+방법1. 태그 내부에 JSX 를 입력한다.  
+<Route path="/"> 
+      <h1> this is main-page</h1> 
+</Route>
+<Route path="/detail"> 
+      <h1> this is main-page</h1> 
+</Route>
+방법 2. 태그 속성에 component={ }를 입력하여 JSX를 더럽게 안짜도 됨. 
+<Route path='/detail' component={ component이름 }></Route> 
+
+Tip! 
+/detail에 접속해도 /에 입력한 내용들이 그대로 보인다. 
+-> URL이 매칭되는 것들을 다 보여준다. 
+이거를 해제하려면? 
+<Route exact> 속성을 추가해주면 된다.
+exact : 정확한.
+
+
+[BrowserRouter (서버O) VS HashRouter(서버X) ]
+HashRouter : 사이트 주소 URL에 #이 붙는다. 
+-> 라우팅을 안전하게 할 수 있도록 도와준다. 리액트 프론트엔드 개발환경에서 서버에게 요청을 안하도록 
+서버에게 전송을 하지 않기 위해서 사용한다. 
+
+BrowserRouter : #이 안붙는다. 
+라우팅을 리액트가 아니라 서버에게 요청할 수도 있어서 위험하다. 
+
+[라우팅 실전]
+쇼핑몰의 메인페이지와 상품의 상세페이지를 나눈다. 
+ex) 메인페이지 : localhost:3000 
+     상세페이지 : localhost:3000/detail
+
+detail JSX코드를 다른 파일에 작성하여서 import 해오고 싶음 
+1. Detail.js 파일을 만든다. 
+보통 컴포넌트 파일을 외부에서 만들기 위해서는 파일명을 첫글자 대문자로 작성한다. 
+2. detail 페이지 내에서 작동할 Detail 컴포넌트를 생성한 이후에 export 한다. 
+3. App.js 파일 내에서 import Detail from './Detail.js'; 한다. 
+
+[페이지 이동하는 버튼 생성하기] 
+Link 태그의 to 속성 활용하기 
+<Link to='이동 URL'> 버튼 </Link>
+
+처음에 react-router-dom 을 import 할때 import 하던 Link를 태그로써 활용한다. 
+Link to = '이동할 URL' 
+
+[Detail 페이지에서 뒤로가기 버튼 만들기] 
+useHistory() 함수 사용하기
+
+import {useHistory} from 'react-router-dom'; 
+let history = useHistory(); 
+// 방문 기록을 저장해 놓는 Object
+
+뒤로가기(goBack) : history.goBack()
+특정 경로로 이동(push) : history.push('/'); 
+
+
+[Switch 컴포넌트 -> 겹치는 것들 중 상위에 있는거 하나만] 
+: URL 중복 허용 X
+Router를 감싸는 용도로 사용한다. 
+
+<Switch>
+ <Route path="/detail">
+   <Detail/>
+ </Route>
+
+ <Route path="/:id"> //:id:모든 문자를 의미한다. 
+	<h1> 아무거나 접속했을때 이거 보여줌 </h1>  
+ <Route>
+</Switch>
+여기서 사용자가 '/detail' 로 접속할 시에
+위의 '/detail' 과 '/:id' 2개가 동시에 다 보인다. 
+왜냐하면, 리액트 라우터는 겹치는거를 다 보여주기 때문
+=> 이 현상을 해결하기 위해서 "URL이 맞는 여러개 중에서 맨 위 하나만 보여주세요~!"의 의미로
+Switch 컴포넌트를 사용한다. 
+
+[App 컴포넌트(메인) -> Detail 컴포넌트(외부 파일 detail.js) ] 
+: shoes 라는 state를 사용하기 위해서는 props 문법으로 전송해야 사용이 가능하다. 
+
+✔✔✔✔✔ [중요! state 관리]
+굳이 shoes라는 state 데이터를 App 컴포넌트에서 선언한 다음에 props를 통해서 shoes 컴포넌트에게 전달한 이후에
+사용해야 하는 것인가? 
+=> Detail 컴포넌트 내에서 shoes state 를 선언한 이후에 사용해도 되는 것 아닌가?
+: 되긴 된다. 
+But ! 중요한 데이터는 항상 App 컴포넌트에 보관하는 것이 정석이자 국룰!
+
+따라서, 모든 중요한 데이터는 App 컴포넌트에 보관하고 다른 컴포넌트에 넘겨주는 것이 좋다.  
+혹은 Redux 파일에 보관한다. 
+
+✔ detail / [뒤의 숫자] 에 따라서 보여주는 상품을 다르게 하려면 어떻게 해야하는가?
+
+detail.js 에서
+=> react-router-dom 의 useParams Hook(함수)을 사용하면 된다. 
+import { useHistory,useParams } from 'react-router-dom'; 
+let { id } = useParams(); 
+{ 사용자가 입력한 URL 파라미터들이 Object 로 남는다. ex){id1/id2} } 
+ex) 사용자가 detail/2 로 입력하면 id는 2가 남는다. 
+
+[ target ]
+ /detail/0  
+: 접속하면 0번째 상품을 보여줌
+ /detail/1 
+: 접속하면 1번째 상품을 보여줌
+ /detail/2 
+: 접속하면 2번째 상품을 보여줌
+
+/detail/:id 
+: detail 뒤에 어떤 글자가 오던간에 아무 문자나 받겠다는 URL 작명법
+1. 콜론 뒤에 맘대로 작명
+2. 여러개 사용 가능  /detail/:id/:id2 
+
+ex1)   <Route path="/detail/:id">
+    <Detail shoes={shoes}/>
+  </Route>
+
+/detail 뒤에 어떤 id가 오던간에 Detail 컴포넌트가 가진 페이지로 이동
+
+ex2) <Route path="/:id">
+    <h3>아무거나 적었을 때 이거 보여줘</h3>
+  </Route>
+
+[실습] 자료의 순서가 변경되면 상세페이지도 고장나는 문제
+: 상품을 가격순 정렬을 눌렀을 때 detail/상세페이지 URL을 입력하면
+상세페이지도 이상해짐
+어떻게 해결할 것인가? find 혹은 filter 함수를 활용
+1. 정렬버튼을 먼저 구현한다. 
+2. data.js 내에 있는 영구적인 id를 이용해본다. 
+

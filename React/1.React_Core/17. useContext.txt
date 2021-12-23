@@ -1,0 +1,99 @@
+Context API
+: 하위 컴포넌트 들이 props 없이 동일한 값을 공유하게 하는 방법
+
+App에 있는 재고 state
+App 컴포넌트 안의 Card 컴포넌트 안에 재고를 나타내기 위한 새로운 컴포넌트를 생성하여 
+그 곳에 데이터 바인딩을 하기 위해서는? => 3중 props 를 사용해야 한다
+
+[해결방안]
+Context API 를 사용하면 된다. 
+: 하위 컴포넌트들이 props 없이도 부모의 값을 사용 가능하다. 
+
+[context 만들기] 
+0. import React, {useState, useContext} from 'react';
+
+1. App 컴포넌트 밖에  
+let 재고Context = React.createContext(); 로 범위 생성 (R.c.C)
+✔ 범위 : 같은 변수 값을 공유할 범위 생성 
+✔ <재고Context> 는 범위를 지정하는 특별한 컴포넌트가 된다. 
+
+2. 같은 값을 공유할 HTML들을 
+<재고Context.Provider> 로 감싸고 value = { 공유를 원하는 값 } 을 넣어준다. 
+App.js 내부에서 state로 선언한 let [ 재고, 재고변경 ]  = useState([10,11,12]); 
+
+ex) 
+<재고Context.Provider value={재고}>
+        <div className = 'row'>
+          {
+            shoes.map((value, index)=>{
+              return <ProductTemplate shoes={shoes} index={index} key = {index}></ProductTemplate>
+            })
+          }  
+        </div> 
+</재고Context.Provider>
+
+✔ 이제 ProductTemplate 컴포넌트, 혹은 그 하위의 컴포넌트에서는 
+let 재고 = useContext( 재고Context );
+재고state 값을 사용 가능하다. 
+
+3. props 전송 없이 범위 내에 존재하는 컴포넌트 상에서 재고 state 를 사용 가능
+
+4. 범위 내에 있는 컴포넌트 내에서 가져다 쓰기
+let 재고 = useContext(재고Context);
+ 
+function ProductTemplate(props){
+  let 재고 = useContext(재고Context); 
+  return ( 
+    <div className = 'col-sm-4 img-wrap'>
+    <img src={'이미지파일/shoes'+ (props.shoes[props.index].id+1) +'.jpg'}/> 
+    <h4> 상품명 : {props.shoes[props.index].title} </h4>
+    <p> 상품설명 : {props.shoes[props.index].content } </p> 
+    <p> 가격 : {props.shoes[props.index].price} </p> 
+    <Test> </Test> 
+  </div>      
+  );
+}
+
+5. ProductTemplate 컴포넌트 내부에 있는 Test 컴포넌트 에서도 적용이 가능
+⚠ 범위 내에 존재하는 모든 컴포넌트에 적용이 가능하다. 
+
+function Test(){
+  let 재고 = useContext(재고Context); 
+  return (
+    <p>재고 : { 재고 } </p>
+  );
+}
+
+6. 다른 파일에 있는 컴포넌트에 값을 공유하고 싶다. 
+다른 모든 과정은 동일
+[App.js] 
+export let 재고Context = React.createContext(); 
+
+[Detail.js] 
+import {재고Context} from './App.js'; 
+
+
+⭐⭐⭐ useContext 사용법 요약
+
+1. 범위를 정하기 위한 컴포넌트 태그를 변수로써 생성한다.
+작명법은 ~~~Context로 한다.  (R.c.C)  
+let 재고Context = React.createContext( );
+
+2. 사용을 원하는 하위 컴포넌트에 재고 state를 넘겨주기 위해서
+재고Context.Provider 로 태그를 정하고 value 값으로 사용을 원하는 state값을 전달 해준다. 
+이제 ProductTemplate에서 재고state 값을 사용 가능 
+
+<재고Context.Provider value={ 재고 }>
+    <ProductTemplate> </ProductTemplate>
+</재고Context>
+
+3. 사용을 원하는 컴포넌트 상에서 
+let 재고 = useContext( 재고Context ); 로 사용한다. 
+ function ProductTemplate(){
+    let 재고 = useContext( 재고Context ); 
+}    
+
+[대체방안] 
+Redux (라이브러리)  
+: 모든 컴포넌트 파일들이 같은 값을 공유할 수 있는 저장공간 생성 가능
++ state 데이터 관리 기능

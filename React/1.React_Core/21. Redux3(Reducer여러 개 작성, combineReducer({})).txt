@@ -1,0 +1,86 @@
+⭐Redux 3
+
+Redux : 모든 컴포넌트에서 복잡한 props 전달 없이 전역 state를 만들어서 사용하는 과정
+
+state, reducer 추가법
+reducer가 너무 길면 다른 js 파일로 export/import 해서 사용한다. 
+
+✔ Redux 2 복습
+[redux에서의 state 만드는 방법]
+> 변수로 초기 데이터를 넣어주고 
+reducer 라는 함수 내에 state를 수정하는 코드를 작성한다. 
+
+이후 createStore에 reducer 를 넣어준다. 
+let store = createStore(reducer);
+store 변수 -> state 보관통
+
+[index.js에서 만든 state 사용방법]
+1. import {connect} from 'react-redux'; 
+props를 등록하면 store에 있는 state를 사용 가능
+
+2. function state를props화(state){
+    return {
+        state : state
+    }
+}
+
+3. export default (state를props화)(Cart);
+
+
+[ 본론 ] 
+⭐ state가 여러개 필요하면 reducer를 여러개 만든다. 
+만든 이후에 combineReducer({ }) 를 통해서 합친다. 
+
+✔ 다른 데이터도 state로 만들어서 저장하고 싶다. 
+실습 : cart.js 파일에서 "지금 구매하면 20% 할인!" 이라는 alert 창을 띄우고 이를 close하는 UI를 추가
+
+Close 하는 UI는 state를 true/false 로 조작하여 판별해서 만든다. 
+이때 이 state를 Redux로 state를 만들어보자. 
+
+ex)
+
+✔ state 제작 [index.js]
+
+let alert초기값 = true; 
+function reducer2(state=alert초기값, 액션)){
+  if (액션.type === '닫기'){
+    return false;
+  }
+  return state;
+}
+
+이전에 state를 만드는 법과 동일하게 제작한다. 
+이후 store 변수에 createStore()에 새로 만든 reducer 함수를 추가 해 준다.
+
+⭐ combineReducers({ })
+import { combineReducers } from 'redux';
+createStore(combineReducers({reducer, reducer2}));
+> 객체 형식으로 넣어준다. 
+
+✔ state 데이터 뽑아쓰는 법 [Cart.js]
+아까 Cart.js 에서 state를 props 로 바꿔주는 함수를 작성하였음. 
+이 함수 내의 state값 또한 reducer가 추가된다면 자료가 변경된다. 
+
+function state를props화(state){
+    // return 내부에 있는 내용들이 props 로 전달될 것임.
+    // 따라서 return 을 { } 객체형태로 반환하게끔 중괄호로 해준다. 
+    console.log(state); 
+    return {
+        state : state.reducer,
+        alert : state.reducer2
+    }
+}
+
+여기서 state에 전달되어 오는 데이터는 다음과 같다. 
+console.log(state); 
+{reducer: Array(2), reducer2: true}
+reducer: Array(2)
+0: {id: 0, name: "멋진 신발", quan: 13}
+1: {id: 1, name: "멋진 신발2", quan: 3}
+reducer2: true
+
+
+⚠ Redux store 는 온갖 state들을 저장하는 곳이 아님.
+컴포넌트 하나에서만 쓰이는 것은 Redux에서 굳이 저장할 필요가 없음
+하찮거나 하나의 컴포넌트에서 사용되는 state들은 그냥 useState()를 사용하는 것이 가장 좋음
+

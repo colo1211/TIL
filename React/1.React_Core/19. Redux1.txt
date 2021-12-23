@@ -1,0 +1,90 @@
+⭐ Redux 1
+부제 : 카트 페이지를 만들며 Redux 배우기
+
+Cart 컴포넌트를 만들기 위해서 Cart.js를 src 파일 내에 제작한다. 
+- 다른 파일에서 컴포넌트 만들기 복습
+
+[Cart.js] 
+1. import React from 'react' ;
+2. export default Cart ; 
+
+-> Cart 컴포넌트에 table을 부트스트랩에서 가져온다. 
+import {Table} from 'react-bootstrap';
+
+[App.js]
+App.js 에서 Cart.js를 사용하기 위해서
+import Cart from './Cart.js';
+
+⭐import 할 때 { } 유무 차이점
+import Table : export defalut 된거 가져오기
+import {table} : table 이라는 변수/함수 가져오기
+
+[Cart 컴포넌트에 shoes state를 전송하는 방법]
+1. props 로 전달하기 
+2. Context Api 를 통해서 전달하기
+3. Redux를 통해서 전달하기 
+
+> Redux 를 쓰는 이유 
+1. 깊은 하위 컴포넌트 들도 props를 여러번 전송 없이 state를 직접 갖다 쓸수 있다. 
+
+[Redux 설치법] 
+1. npm install redux
+
+2. npm install react-redux
+=> npm install redux react-redux 
+(두개를 띄워서 입력하면 동시에 두개가 설치 된다)
+
+3. [index.js] 로 이동
+> import { Provider } from 'react-redux';
+> <Provider> 로 <App>을 감싸기 
+⭐ Provider 로 감싼 애들은 props 없이도 state 공유가 가능하다. 
+
+ex)
+<BrowserRouter>
+    <Provider>
+       <App />
+     </Provider>
+</BrowserRouter>
+
+4. [index.js] 에서 
+import { createStore } from 'redux' ; 
+
+let store = createStore() 안에 state 저장
+⭐ createStore( ) 내부에는 콜백함수로 state를 퉤뱉는 return 문을 작성할 수 있다. 
+
+let store = createStore(()=>{ return [{id : 0, name:'멋진 신발', quan : 2}] }); 
+
+5. <Provider> 에 props 를 전송한다. 
+ex) 
+    <BrowserRouter>
+    <Provider store={store}>
+      <App />
+    </Provider>
+    </BrowserRouter>
+
+6. index.js에서 선언한 store state를 Cart.js에서 쓰려면 
+	0. import { connect } from 'react-redux';
+	1. function 만들기 (state를 props화 시키는 역할) : Redux store 데이터를 가져와서 props로 변환해주는 함수
+		function state를props화(state){
+		    return {
+      		    state : state
+    		    }
+		}
+	2. export default connect( function이름 )(Cart)
+
+	3. function Cart(props)에서 보는것과 같이 props로 받아온다. 
+	4. {props.state[0].~~} 와 같이 데이터 바인딩 가능해진다. 
+
+
+[요약]
+
+Redux를 이용
+index.js 에서 let store = createStore(()=>{ return[~~]}); 을 통해 store을 정의하고
+<Provider store={store}>
+<App/>
+</Provider> 
+를 통해서 전달한 state를 Cart.js 에서 받아온다. 
+이를 받아오기 위해서는
+import {connect} from 'react-redux'; 
+export default (state를props화시키는함수이름)(Cart);
+을 작성하여 Cart 컴포넌트에서 props를 받아와서 사용하면 된다. 

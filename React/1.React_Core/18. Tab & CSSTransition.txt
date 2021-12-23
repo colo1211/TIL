@@ -1,0 +1,126 @@
+Tab 기능 개발하기 
+1. Tab의 기능 개발 원리 
+2. Tab 을 띄울 때의 Animation 을 부여하기
+
+[1. Tab의 기능 개발 원리]
+버튼 3개
+div 3개 
+=> 1번 버튼을 누르면 1번째 div 가 나오게 설계
+
+1번 버튼을 누른 것을 어떻게 전달? UI 만드는 법과 동일하다
+
+0. 버튼을 누르면 onClick 속성을 통해서 state의 상태를 조작한다. 
+1. UI 상태를 Tab 번호를 알 수 있는 state 로 저장해 둔다. 
+2. state 번호상태에 따라서 UI를 보이게/ 안보이게 설정한다. 
+
+근데 그냥 버튼 누르는 것으로 UI가 너무 허접하기 때문에 
+react-bootstrap 을 통해서 base-nav 로 들어가서 [tab 컴포넌트]를 가져온다. 
+
+[Tab Component] 
+- defaultActiveKey = ' ' : 사이트에 최초에 접속했을 때 몇 번째 요소를 사용자가 누른것 처럼 꾸밀지 정하는 속성  
+
+<Nav className='mt-5' variant="tabs" defaultActiveKey="link-0">
+   <Nav.Item>
+       <Nav.Link eventKey="link-0">Active</Nav.Link>
+    </Nav.Item>
+    <Nav.Item>
+        <Nav.Link eventKey="link-1">Option 2</Nav.Link>
+    </Nav.Item>
+</Nav>
+
+<div>0000</div> <- 0번째 버튼 눌렀을 때 이거 보여주세요
+<div>1111</div> <- 1번째 버튼 눌렀을 때 이거 보여주세요
+<div>2222</div> <- 2번째 버튼 눌렀을 때 이거 보여주세요
+
+
+✔ 몇 번째 버튼을 눌렀는지 저장할 데이터는 state로 저장한다. 
+✔ 버튼을 눌렀을 때 state 를 변경할 요소는 버튼에 onClick 을 통해서 변경해준다. 
+✔ state가 0이면 0번째 div 를 보여준다. 1이면 1번째 div. 2이면 2번째 div를 보여주면 된다. 
+
+BUT!!! JSX 에서는 조건문으로 삼항연산자(조건문 2개) 까지만 가능한데 어떻게 조건문 3개를 하지???
+=> 컴포넌트로 빼서 조건문을 작성하고 JSX 를 return 해주면 된다. 
+
+function Tab(props){
+  if (props.누른탭 === 0){
+    return (
+      <div>0번째 탭 내용임 ㅅㄱ</div>
+    );
+  }else if(props.누른탭 === 1){
+    return (
+      <div>1번째 탭 내용임 ㅅㄱ</div> 
+    );
+  }else if(props.누른탭 === 2){
+    return (
+      <div>2번째 탭 내용임 ㅅㄱ</div>
+    );
+  }
+}
+
+
+[2. Animation ] 
+Tab 이 나올 때 투명도가 0에서 1까지 서서히 변경되는 것을 개발하고 싶으면? 
+CSS 개발하는 것과 동일한 방법으로 진행하면 된다. 
+
+react-transition-group 
+: 컴포넌트 등장/업데이트 시 transition(천천히 바꿔주는) 을 쉽게 쉽게 줄 수 있는 라이브러리
+
+[설치법] 
+1. 터미널에서 npm install react-transition-group 
+2. import {CSSTransition} from 'react-transition-group'; 
+
+[사용법]
+1. <CSSTransition> </CSSTransition> 으로 애니메이션이 필요한 JSX를 태그로 감싸기
+2. 속성으로 in, classNames, timeout 3가지를 필수적으로 넣기 (ICT)
+> in : 애니메이션 동작 스위치 같은 것 (True일 때만 동작)  
+
+ex) 
+      <CSSTransition in={true} classNames='wow' timeout={500}>
+        <Tab 누른탭={누른탭}></Tab>
+      </CSSTransition>
+
+3. class 로 애니메이션 넣기
+
+등장할 때 : 클래스명-enter
+퇴장할 때 : 클래스명-exit
+
+// 애니메이션 시작때 적용할 CSS
+.wow-enter{
+    opacity: 0;
+}
+
+// 애니메이션 동작때 적용할 CSS
+.wow-enter-active{
+    opacity: 1;
+    transition : all 0.5s;
+}
+
+TIP! : timeout과 transition의 시간을 맞춰줘야 시간이 제대로 작동하더라...
+
+4. 원할때 스위치를 켜기/ 끄기
+✔ 탭 버튼을 누르면 스위치를 끔. 
+
+<Nav.Link eventKey="link-0" onClick = {()=>{ 스위치변경(false); 누른탭변경(0)}}>Option 0</Nav.Link>
+
+✔ 컴포넌트 로드/업데이트할 시 스위치를 켠다. 
+
+function Tab(props){
+
+  // 컴포넌트가 로드가 될때
+  useEffect(()=>{
+    props.스위치변경(true); 
+  })
+
+  if (props.누른탭 === 0){
+    return (
+      <div>0번째 탭 내용임 ㅅㄱ</div>
+    );
+  }else if(props.누른탭 === 1){
+    return (
+      <div>1번째 탭 내용임 ㅅㄱ</div> 
+    );
+  }else if(props.누른탭 === 2){
+    return (
+      <div>2번째 탭 내용임 ㅅㄱ</div>
+    );
+  }
+}

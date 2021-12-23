@@ -1,0 +1,46 @@
+/* eslint-disable */
+import React, {useState, useContext, useHistory, useEffect} from 'react';
+import logo from './logo.svg';
+import './App.css';
+import { Nav, Navbar, NavDropdown, Container, Button} from 'react-bootstrap'; 
+// data.js 에서 데이터를 import 해오기 
+import data from './data.js'; 
+import { Route, Link, Switch } from 'react-router-dom';
+import Detail from './Detail.js'; 
+import axios from 'axios'; // ajax 를 사용하기 위한 axios 라이브러리
+import Cart from './Cart.js';
+import { useSelector } from 'react-redux';
+
+[App.js] 의 import 한 컴포넌트들 
+Detail, Cart 등 모든 컴포넌트들을 미리 로드한 다음에 아래에 있는 코드들을 렌더링함
+=> 부담이 될 수 도 있음. 
+
+⭐⭐⭐⭐⭐Cart 컴포넌트가 필요할 때(방문할 때) import 하게끔 하자. 
+
+[ Lazy Loading ] 
+: 해당 컴포넌트가 필요할 때, import 하게 하는 방법
+react 로 부터 lazy(게으름) 와 Suspense(긴장감) 를 import 해온다. 
+
+[ 사용 방법 ]
+1. import {lazy, Suspense} from 'react' ; 
+> 해당 컴포넌트가 필요할 때 import 하도록 lazy를 import 해온다. 
+
+2. let Detail = lazy(()=>{ return import (' ./Detail.js ') });
+
+3. JSX 코드 내부에서 <Detail/> 컴포넌트가 있는 곳으로 가서
+<Suspense> 태그를 lazy 로딩을 원하는 곳으로 가서 감싼다. 
+<Suspense>
+	<Detail/>
+</Suspense>   
+
+4. lazy 로딩은 살짝 느릴 수 있다. 
+그러므로 Suspense 태그에 속성으로 fallback 으로 로딩 중에 뜨게할 UI를 구현할 수 있다.  
+> Suspense 태그는 반드시 '컴포넌트만' 감싼다. 
+
+<Route path='/cart'> 
+  <Suspense fallback={ 로딩중에 원하는 HTML 태그 }> 
+	<Cart/>
+   </Suspense>
+</Route>
+
+ 

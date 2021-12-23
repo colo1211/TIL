@@ -1,0 +1,64 @@
+⭐ Redux 2 데이터 수정 (reducer / dispatch) 
+> reducer/dispatch 데이터 수정
+> 장바구니 +/- 버튼을 생성한 이후 state 값을 변경하기
+
+[Redux 를 쓰는 이유] 
+1. 복잡한 props 전송이 필요 없다. 
+-> 모든 컴포넌트가 직접 데이터를 꺼내 쓸 수 있다. 
+
+2. state 데이터 상태 관리가 용이해진다. 
+> Redux 에서는 'state 데이터의 수정방법'을 미리 정의한다. 
+(그 방법에 따라서만 수정이 가능) 
+대규모 사이트는 state가 100만개가 존재한다고 가정, 
+갑자기 state가 이상해지면? 버그를 어디서 찾아야하지?
+-> redux를 안쓰면 component 100만개를 모두 뒤져봐야 한다. 
+But, Redux를 사용하면 데이터가 이상해지면 reducer/dispatch 만 보면 된다. 
+
+
+⭐⭐⭐⭐⭐ state 데이터 수정 방법 
+> index.js 에서 reducer 함수명으로 미리 정의해놓는다. 
+> 간단하게 생각하자. reduce는 useState를 실제로 구현한다고 생각해보자 
+-> useState는 원래데이터와 변경함수를 생성해준다. 
+우리는 reduce 함수를 통해서 state를 생성/ state 변경함수 를 제공해준다고 생각하면 된다. 
+이후 이것을 let store = createStore(reduce); 에 넣어준다.  
+ 
+
+✔ 이게 원래 state를 만드는 근본적인 방법임
+function reducer() {
+
+}
+
+1. 데이터를 변수에 저장해 놓는다. 
+let 초기값 = [
+ {
+     name : '김경원',
+     age : 26
+ }
+];
+
+2. reducer 함수 (state의 원래 데이터와 수정함수를 만들어준다고 생각하자) 
+   state 초기값 / state 데이터 수정 방법이 들어가 있는 함수
+✔ reducer 함수 역할. 
+ > 수정이 안되었을 시에는 기본값을 return 
+ > 수정이 되었을 시에는 수정된 값을 return 
+
+첫 번째 인자로 [초기값 변수], (default parameter 문법, ES6 신문법)
+두 번째 인자로 [액션] 설정
+function reducer( state = 초기값, 액션 ){
+     if( 액션.type === '수량증가' ){
+	let copy= [ ...state ];
+	copy[0].age ++; 
+	return copy; 
+      }
+      else return state; // 수정요청이 없는 경우에는 그냥 state를 리턴
+}
+
+3. let store = createStore(reducer);  
+를 한 이후에 
+<Provider store={store}>
+	<App/>
+</Provider>
+ 
+4. Cart.js 에서 props.dispatch( { type : '수량증가' } )를 사용한다. 
+<button onClick={()=>{props.dispatch( { type : ' 아까 수정을 위해 설정한 명령어 '  })}}> </button>
+

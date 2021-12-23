@@ -1,0 +1,11 @@
+find/findIndex 함수 
+: 둘다 array 안에서 원하는 데이터를 찾아주는 함수 
+
+find : true / false 
+findIndex : 몇번째 Index인지 
+
+let found = state.findIndex( (value)=>{ 
+       return value.id === 액션.payload.id
+})
+
+found 변수에 숫자가 결과로 남는다. 

@@ -1,0 +1,80 @@
+AJAX 
+: 서버에 '새로고침없이' 요청을 할 수 있게 도와주는 도구 
+
+서버 : 누군가가 페이지 요청을 하면 페이지를 가져다 주는 프로그램
+
+[ 요청 ]  
+1. GET 요청 (특정 페이지/ 읽기 전용)
+: 주소창에 URL 을 때려 박는 요청
+
+2. POST 요청
+: 서버로 중요한 정보를 전달 ex) 로그인  
+
+[ AJAX 사용 방법 ] 
+1. jQuery 설치 후, $.ajax( )
+
+2. axios 설치 후, axios.get( )
+
+3. 쌩자바스크립트, fetch( ) : axios 형식과 사용방법은 유사 
+But JSON 파일 객체 변환이 어려움
+
+⭐리액트 혹은 뷰에서는 axios 라이브러리를 설치 해서 이용한다.
+⭐⭐⭐ 왜 저 3가지 방법 중 axios를 사용하는 것인지? 
+JSON 파일을 Object 형식으로 잘 변환해서 받아와준다. 
+나머지는 Object 파일로 변환이 까다로울 수 있기 때문에 Axios를 활용한다. 
+
+<JSON 파일> 
+: "key" : "value"  
+ex) 
+[
+  {
+    "id" : 3,
+    "title" : "Flowey",
+    "content" : "only 5 inches",
+    "price" : 120000
+  },
+  {
+    "id" : 4,
+    "title" : "Baby shoes",
+    "content" : "for less than 6",
+    "price" : 120000
+  },
+  {
+    "id" : 5,
+    "title" : "Red Herring",
+    "content" : "Born in France",
+    "price" : 120000
+  }
+]
+
+<Object 파일>
+: key : "value" 
+
+[axios 설치 및 사용 방법]
+1. 터미널을 연다.
+2. npm install axios
+3. App.js 내에서 import axios from 'axios';
+
+[GET 요청 사용법] 
+1. axios.get( 데이터를 요청할 URL ) ⭐ 이런 URL은 API를 참고하거나 백엔드 개발자와 협업하면서 알면됨. 
+2. 성공할 때는 get뒤에 then(), 실패할 때는 catch() 
+   axios.get( 데이터 URL )
+   .then(( )=>{ 성공했을 때 실행할 JS 코드 })
+   .catch(( )=>{ 실패했을 때 실행할 JS 코드 })
+
+[POST 요청 사용법] 
+axios.post('원하는 URL', { id : 'test', pw : 1234})
+  .then((result)=>{  })
+  .catch(()=>{ })
+
+⭐지금까지는 특정 버튼을 누르면 ajax 를 통해 GET 요청을 받아오는 것을 했지만, 
+만약 특정 페이지 혹은 특정 컴포넌트에 접속하자 마자 새로운 GET 요청을 받아오고 싶다면??
+
+useEffecct(( )=>{
+    axios.get('URL')
+    .then(( )=>{ })
+    .cath(( )=>{ })
+},[ ]) 
+
+⭐ useEffect 두번째 인자로 [ ] 대괄호를 넣어 준 것은 해당 페이지 등장 한번만을 의미.
+업데이트 고려 X

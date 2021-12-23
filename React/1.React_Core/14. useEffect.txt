@@ -1,0 +1,165 @@
+Lifecycle Hook(옛) vs useEffect(최신)
+
+[목적]
+"컴포넌트 등장 전에 이것좀 해줘"
+"컴포넌트 사라지기 전에 이것좀 해줘"
+"컴포넌트 업데이트 되고나서 이것좀 해줘"
+
+ 
+컴포넌트의 LifeCycle 
+: 컴포넌트의 인생... 컴포넌트가 생성되거나 죽거나 업데이터(재렌더링)되는 과정
+
+LifeCycle 중간중간에 컴포넌트들에게 Hook을 걸을 수 있다(마치 낚시 바늘처럼).
+
+ex) 컴포넌트가 생성되기 이전에 Hook을 건다. (컴포넌트 생성 이전에 이것좀 해줘)
+     컴포넌트가 소멸되기 이전에 Hook을 건다. (컴포넌트 소멸 이전에 이것좀 해줘)
+
+✔ 따라서, Hook으로 컴포넌트의 인생 중간중간에 무언가의 명령을 내릴 수 있다. 
+ex) <Detail/> 컴포넌트 등장 이전에 이것 좀 먼저 해주세요
+
+
+[ 옛문법 ]
+ex) 
+class Detail extends React.Component {
+  componentDidMount(){
+    //Detail 컴포넌트가 Mount 되고나서 실행할 코드
+  }
+  componentWillUnmount(){
+    //Detail 컴포넌트가 Unmount 되기전에 실행할 코드
+  }
+}
+
+---------------------------------------------------------------------------
+
+useEffect Hook(최신) 
+
+컴포넌트가 mount 되었을 때 (보일 때)
+컴포넌트가 update 될 때 
+특정 코드를 실행할 수 있음
+
+[사용 방법]
+1. import { useEffect } from 'react' ; 
+2. 컴포넌트 내부에서 
+useEffect(( )=>{
+      	
+});
+
+
+
+
+사용법 1. (Didmount 될때, 컴포넌트 실행 및 "업데이트 될 때")
+✔ return 이후가 아닌 return 을 쓰지 말고 작성한다. 
+컴포넌트가 렌더링된 후, 2초 후에 알림창이 사라지게 끔 UI를 구성
+⚠ 주로 setTimeout을 변수에 저장하는 경우가 많음
+-> 삭제하고 싶으면 편하게 하기 위해서
+
+function Detail(props){
+
+  let [알림창, 알림창변경] = useState(true); 
+
+  // 해당 Detail 컴포넌트가 렌더링 될때 실행되는 코드 
+ useEffect(()=>{
+    let 타이머 = setTimeout(()=>{
+      //2초 후에 alert-box 사라지게
+      알림창변경(false); 
+    },1000); 
+  });
+
+
+  
+return (
+// 여기는 JSX 영역
+	{
+        알림창 === true
+        ?<div className = 'my-alert'>
+        상품 재고 2개 남았습니다!
+        </div> 
+        : null
+      }	
+);
+}
+
+
+
+
+사용법 2. (Unmount 될때, 컴포넌트 사라질 때) 
+컴포넌트가 사라질 때, 특정 코드를 실행시킬 수도 있음(사라질 때 실행 됨)
+✔ return 옆에 사용
+✔ arrow function 도 가능
+
+function Detail(props){
+    useEffect(()=>{
+     return function 함수명(){
+	// 사라질 때, 실행할 코드
+	// return 은 여기서는 반환이라기보다 해당 컴포넌트가 없어지면 실행해달라는 의미
+}
+});
+}
+
+
+
+
+
+사용법 3. useEffect Hook 여러 개 사용하고 싶을 때
+여러개 사용해도 문제될것 없음, 위에서 부터 실행됨
+
+function Detail(props){
+	useEffect(()=>{
+		// 첫번째로 실행
+	})
+	useEffect(()=>{
+		// 두번째로 실행
+	})
+
+}
+
+ 
+사용법 4. useEffect의 조건(?)문 
+✔ useEffect 는 원래 업데이트(재렌더링) 될때 항상 실행된다. 
+✔ '특정 state 가 변경될 때만 실행해 달라.'
+
+방법. 
+ useEffect(()=>{
+  }, [ state명 ]);
+
+특징 
+useEffect 의 두번째 인자로 대괄호내에 특정 state가 변경될 때만 해당 useEffect 를 실행해 달라고 명령
+
+✔✔✔✔✔ [ ] : 아무것도 안쓸시에는,  빈 state가 변경될 때만 실행해주세요
+=> 업데이트 될때는 실행이 안된다. 최초의 페이지 로딩 때만 실행된다. 
+
+사용법 1에서 Didmount 될때, 컴포넌트 실행 및 "업데이트 될 때"에 대해서 배웠는데 
+⚠ '업데이트 될 때, 재렌더링 될 때' 에 대해서 살펴보자
+
+function Detail(props){
+    let [input, input변경] = useState();
+    useEffect(()=>{
+        let 타이머 = setTimeout(()=>{
+        //2초 후에 alert-box 사라지게
+        알림창변경(false); 
+        },1000);
+     console.log('Hi');  
+  });
+    return (
+      {input}
+      <input onChange={(e)=>{input변경(e.target.value)}}/>
+);
+}
+
+여기서 input 에 사용자가 무엇을 입력할 때 마다 input에 입력한 데이터는 화면에 나오면서
+useEffect 내부에 있는 console.log('Hi'); 는 계속 콘솔창에 출력된다. 
+-> 명백한 자원낭비이다. useEffect의 조건문을 활용하여 이를 제어한다. 
+
+
+
+
+⭐⭐⭐⭐⭐ Tip. 
+useEffect 내에서의 setTimeout 제거 방법
+: useEffect에서 return 을 만나면 해당 컴포넌트가 사라질 때 실행하는 코드이다. 
+여기에서 clearTimeout (타이머);를 하면 여러 버그를 줄일 수 있다. 
+
+useEffect(()=>{
+   let 타이머 = setTimeout(( )=>{ alert변경(false)}, 2000);
+   console.log('안녕'); 
+   return ( )=>{ clearTimeout( 타이머 )};  
+})
