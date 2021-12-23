@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            margin : 0; 
+        }
+        .container{
+            background-color: lightgray; 
+            height : 100vh; 
+            display : flex;
+            flex-direction : row;
+/*            flex-wrap : wrap; */
+        }
+        .item{
+            background-color: rgba(255,0,0,0.5);
+/*            flex-grow : 1;*/
+            flex-basis: 0;
+        }
+        .item:nth-child(odd){
+            background-color: rgba(255,255,0,0.5); 
+        }
+        
+        .item:nth-child(1){
+            flex: 1; 
+            align-self : flex-start; 
+        }
+        .item:nth-child(2){
+            flex : 2;
+            align-self : center; 
+        }
+        .item:nth-child(3){
+            flex: 1; 
+            align-self : flex-end; 
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="item">
+            <p>AAAAAAAAAAAAA</p>
+            <p>AAAAAAAAAAAAA</p>
+            <p>AAAAAAAAAAAAA</p>
+        </div>
+        <div class="item">
+            <p>BBBBBBBBBBBBBBBBBB</p>
+        </div>
+        <div class="item">
+            <p>CCC</p>
+        </div>
+    </div>
+</body>
+</html>
