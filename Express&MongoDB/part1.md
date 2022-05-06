@@ -18,7 +18,6 @@
 
 # 서버란?
 
----
 * server : 요청을 받으면 요청한 내용을 보내주는 프로그램
     * 서버 : 서빙하는 사람
     * 서버 개발자 : 알바생을 만드는 역할
@@ -45,8 +44,6 @@ ex) 요청의 유형에 따른 응답
 
 # Node.js란? 
 
----
-
 * JavaScript는 HTML 파일에 종속된 언어 (HTML의 조작과 변경을 위한 언어)
     * HTML은 정적인 페이지를 만들어 내는 언어
     * JS를 이용하면 웹페이지를 동적으로 조작이 가능
@@ -64,7 +61,6 @@ ex) 요청의 유형에 따른 응답
 
 ###  Node.js 특징 및 장점
 
----
 ### Non-Bloking I/O <br/>
     
 : 요청 순서에 상관 없이 우선 요청을 모두 받은 이후에 빨리 처리되는 요청들에 대한 응답을 진행한 이후,
@@ -79,8 +75,6 @@ ex) 요청의 유형에 따른 응답
    <br/><br/>
     
 # Node.js & Express Install
-
---- 
 
 express : Node.js의 라이브러리
 
@@ -113,7 +107,6 @@ cf) npm 대신 yarn 설치
 
 # Express 기본 환경 Setting
 
----
 Node.js 환경 위에서 Express를 사용하기 위한 기본 셋팅
 ```
 const express = require('express'); // 설치한 라이브러리 불러오기
@@ -140,8 +133,6 @@ app.listen(8080, function(){
 
 
 # GET 요청 처리하기
-
----
 
 일반적인 웹사이트 요청
 
@@ -170,12 +161,7 @@ app.get('/pet',function(req, res){
 
 # 서버에서 HTML 파일 전송 & Nodemon을 통한 실행 자동화
 
----
-
-
 ### Nodemon 및 설치
-
---- 
 
 * Nodemon <br/> 
 : 기존의 노드는 코드에 변경사항이 있으면 `node server.js` 를 계속 진행해야 했지만, 
@@ -193,8 +179,6 @@ app.get('/pet',function(req, res){
 
 ### 서버에서 HTML 파일 보내기
 
---- 
-
 * 응답.sendFile(보낼 파일 경로)
 ```
 app.get('/', function(res,req){
@@ -206,8 +190,6 @@ app.get('/', function(res,req){
 
 
 # POST 요청 처리하기
-
---- 
 
 ### form 데이터 [ POST 요청 처리하기 ]
 1. body-parser 사용하기
@@ -263,8 +245,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 # REST API
 
---- 
-
 API란? <br/> 
 
 `사전적 API 정의`
@@ -286,8 +266,6 @@ WHY REST API? <br/>
 
 
 #### REST 원칙 6개 중 1개만 기억하자.
-
---- 
 
 1. Uniform Interface (⭐⭐⭐⭐⭐⭐)
 
