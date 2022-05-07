@@ -448,7 +448,9 @@ DB
 app.get('/detail/:id', function(req,res){
   req.params.id = parseInt(req.params.id); // 문자형 -> 정수형
   db.collection('post').findOne({ _id : req.params.id }, function(err, result){
-    if(!result){
+    
+    // 없는 페이지에 대한 에러 메세지 보내기
+    if(!result){ 
       res.status(400).send({message: '요청한 페이지가 존재하지 않습니다.' , err}); 
     }
     
@@ -493,3 +495,179 @@ $('.detail').click(function(e){
     <p>날짜 : <%= data.날짜 %></p>
 ```
 
+# EJS, 컴포넌트 느낌으로 개발하기
+
+* 현재 모든 html/EJS 파일 내부에는 nav가 공통적으로 존재한다. 
+* 각각의 html 파일에서 번거롭게 동일한 코드를 작성해야 함.
+
+
+##### views 폴더 내부에 nav.html 파일을 생성하여 ejs 파일에서 `include` 한다.  
+1. views/nav.html 파일을 생성
+```
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="/">TodoApp</a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-toggle="collapse"
+      data-target="#navbarNav"
+      aria-controls="navbarNav"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item active">
+          <a class="nav-link" href="/"
+            >Home <span class="sr-only">(current)</span></a
+          >
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/write">Write</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/list">List</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+```
+
+2. `views / 파일명.ejs` 파일 내부에서 nav.html을 include 한다. <br/>
+   
+⚠ 모든 .ejs 파일은 views 파일 내부에 있어야 한다. 
+
+* include할 때, 반드시 `<%- include() %>` 이어야 한다. 
+```
+<%- include('nav.html') %>
+```
+
+3. 다른 .html 파일도 .ejs 파일로 변경. 
+
+* html 파일에서는 include 하는 문법을 사용할 수 없다. 
+* 단, server.js에서 html은 정적인 파일을 단순히 보여주기만 하기 때문에 `res.sendFile()`을 쓴다. <br/>
+EJS는 단순히 static 파일을 보여주는 것이 아니기 때문에 `res.render('index.ejs')` 파일로 변경한다.  
+
+
+* sendFile() => render()
+```
+app.get('/', function (req, res) {
+  // res.sendFile(__dirname + '/index.html');
+  res.render('index.ejs'); 
+});
+```
+
+# 글 수정 기능 만들기
+
+* edit.ejs 파일을 생성
+* 입력했던 제목 / 날짜가 Form 에 채워져서 나와야 함
+* Form 전송을 누르면 Edit 기능 수행
+
+### 수정 요청 만들기
+
+* 흐름
+1. 게시물 리스트에서 해당 게시물을 클릭했을 때, `상세 페이지 detail/:id` 로 이동한다.
+   
+`BE - server.js/app.get('/detail/:id')`
+```
+app.get('/detail/:id', function(req,res){
+  req.params.id = parseInt(req.params.id); 
+  db.collection('post').findOne({ _id : req.params.id }, function(err, result){
+    if(!result){
+      res.status(400).send({message: '요청한 페이지가 존재하지 않습니다.' , err}); 
+    }
+    res.render('detail.ejs', {data : result});
+  })   
+})
+```
+
+2. detail/:id 페이지에서 수정 버튼을 클릭했을 때, `수정 페이지 edit/:id` 로 이동한다. 글 생성 폼과 동일한 양식으로 id 에 대한 정보를 조회하여,
+    value 값을 채워준다.
+
+`BE - server.js/app.get('/edit/:id')`
+```
+app.get('/edit/:id', function(req,res){
+  var id = parseInt(req.params.id);
+  db.collection('post').findOne({ _id : id}, function(err, result){
+    if(!result){
+      res.status(400).send({message:'해당 페이지는 DB 상에 존재하지 않습니다.'}); 
+    }
+    console.log(result); 
+    res.render('edit.ejs', {data : result}); 
+  });
+})
+
+```
+
+`FE - /edit.ejs`
+* 조회를 통한 데이터 바인딩
+* form PUT 요청을 수행
+* 수정 페이지 (HTML) 에서 Form 양식은 PUT 요청이 불가능, `method-override` 라이브러리를 깔아서 PUT 요청
+```
+<form action="/edit?_method=PUT" method="POST">
+        <div class="form-group">
+          <input name="id" value="<%= data._id %>" style="display: none" />
+          <label>할일</label>
+          <input
+            type="text"
+            value="<%= data.제목 %>"
+            class="form-control"
+            name="title"
+          />
+        </div>
+        <div class="form-group">
+          <label for="exampleInputPassword1">Due Date</label>
+          <input
+            type="text"
+            value="<%= data.날짜 %>"
+            class="form-control"
+            name="date"
+          />
+        </div>
+        <button type="submit" class="btn btn-primary">수정</button>
+      </form>
+```
+3. server.js 에서 수정 폼 제출에 대한 요청을 처리한 이후, redirect 시켜준다. 
+
+`BE - server.js/app.put('/edit/:id')`
+```
+app.put('/edit', function(req,res){
+  var id = parseInt(req.body.id); 
+  db.collection('post').updateOne({ _id : id }, {$set : {제목 : req.body.title, 날짜 : req.body.date}}, function(err, result){
+    if(!result){
+      res.status(400).send({message: '수정에 실패하였습니다.'});
+    }
+    res.redirect(`/detail/${req.body.id}`) // 수정에 성공할 시, 리다이렉트
+  })
+});
+```
+
+
+
+HTML Form 태그에서 지원하는 요청은 `GET / POST` 이다. <br/>
+따라서, 수정 요청시 사용해야 하는 `PUT/DELETE` 를 HTML 상에서 사용하기 위해서는 라이브러리를 설치해야 한다. 
+
+
+### `method-override` 라이브러리 사용 방법
+* method-override <br/>
+: HTML Form 태그에서 PUT/DELETE 요청을 사용 가능하게 해준다. 
+
+1. `npm i method-override`
+
+2. `server.js` 파일에 복붙, 미들웨어 생성
+```
+const methodOverride = require('method-override');
+app.use(methodOverride('_method'));
+```
+
+3. Form 태그 내부에서 PUT 요청 사용하기
+* method 의 값은 POST 로 넣어준다. 
+* action 의 값은 ?_method=PUT 으로 넣어준다. 
+    * action에서 파라미터로 요청한다. 
+```
+<form action="/add?_method=PUT" method="POST">
+  <input>
+</form>
+```
