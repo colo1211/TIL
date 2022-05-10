@@ -173,3 +173,7 @@ passport.deserializeUser(function (아이디, done) {
 
 ![image](https://user-images.githubusercontent.com/63600953/167572107-9d977221-fae3-47ee-b23d-f2be454e71d4.png)
 ![image](https://user-images.githubusercontent.com/63600953/167572187-c582f62b-83e6-4283-a014-c30437c0c7cd.png)
+
+
+* 아래와 같이 쿠키를 저장한다.
+![image](https://user-images.githubusercontent.com/63600953/167572707-035efbff-bb44-4413-b62e-92b96a573e4f.png)
