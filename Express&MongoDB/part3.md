@@ -38,7 +38,7 @@
 3. 내 글만 모아서 보기 가능
 ```
 
-# ID / PW 검사 (By. Session 방식)
+# ID / PW 검사 (By. Session 방식) & passport.js
 
 * 회원가입 : DB에 값을 저장해 넣는 방식으로 진행 <br/> 
     ✔ 로그인 구현에 더욱 집중 할 것!
@@ -158,22 +158,75 @@ passport.use(new LocalStrategy({
 
 * 세션 데이터를 만들고 세션 아이디를 만들어주는 코드
 
+
+`serializeUser();`
+
 ```
 // 유저의 id 데이터를 바탕으로 세션데이터를 만들어주고
 // 그 세션데이터의 아이디를 쿠키로 만들어서 사용자의 브라우저로 보내줌. 
 passport.serializeUser(function (user, done) {
   done(null, user.id)
 });
-
-// 로그인 된 유저가 마이페이지 등을 접속했을 때 실행되는 함수
-passport.deserializeUser(function (아이디, done) {
-  done(null, {})
-}); 
 ```
 
 ![image](https://user-images.githubusercontent.com/63600953/167572107-9d977221-fae3-47ee-b23d-f2be454e71d4.png)
-![image](https://user-images.githubusercontent.com/63600953/167572187-c582f62b-83e6-4283-a014-c30437c0c7cd.png)
 
 
-* 아래와 같이 쿠키를 저장한다.
+* 아래와 같이 쿠키에 세션을 저장한다.
 ![image](https://user-images.githubusercontent.com/63600953/167572707-035efbff-bb44-4413-b62e-92b96a573e4f.png)
+
+
+# 로그인 유저만 접속할 수 있는 페이지 만들기
+
+=> 세션이 있는 사람만 접속할 수 있는 페이지
+
+* `/mypage` 접속시 mypage로 get요청 및 라우팅
+
+```
+app.get('/mypage', function (req, res) {
+  req.render('mypage.ejs', {})
+}) 
+```
+
+
+=> 평범한 라우팅역할을 하는 함수이다. 접속하기 이전에, 로그인 여부를 파악하기 위해서는
+`미들웨어` 가 필요!
+
+`로그인 미들웨어`
+```
+// 마이페이지로 요청을 하게 되면, checkLogin 미들웨어를 실행. 
+app.get('/mypage', checkLogin, function (req, res) {
+  res.render('mypage.ejs', {})
+}) 
+
+function checkLogin(req, res, next){
+    // 유저가 로그인을 했다면,
+    if(req.user){ // 로그인 후 세션이 있으면, req.user가 항상 존재한다. 
+        next(); // 통과
+    }else{
+        res.redirect('/login'); // 안했다면 로그인 페이지로 넘어간다. 
+    }
+}
+```
+
+### 미들웨어에서 사용하는 req.user란? 
+
+* `deserializeUser();`
+    * 로그인이 필요한 페이지를 접근할 때 마다, 실행
+    * 이 사람이 세션이 있는지 없는지 찾아주는 역할
+    * 로그인한 유저의 개인 정보를 DB에서 찾는 역할
+    => 세션에는 유저의 id 정보만 저장되어 있음
+      
+```
+// 로그인한 유저가 로그인된 페이지를 요청할 때(접속할 때) 실행되는 함수
+passport.deserializeUser(function (아이디, done) {
+    console.log('deserializeUser 들어옴',아이디);
+    db.collection('login').findOne({ id : 아이디}, function(err,result){
+      console.log(result); 
+      
+      // db에서 user.id 로 유저를 찾은 후에, 유저정보를 result에 넣어주는 역할
+      // 마이페이지 같은 곳에 데이터 바인딩을 위해
+      done(null, result);
+    })
+}); 
+```
