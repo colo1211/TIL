@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" , initial-scale="1.0" />
+    <title>무한 스크롤 예제</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+      }
+      section .box {
+        height: 1000px;
+        box-sizing: border-box;
+        background-color: tomato;
+        color: white;
+      }
+      section .box:nth-child(2n) {
+        background-color: teal;
+      }
+    </style>
+  </head>
+  <body>
+    <section>
+      <div class="box">1번째 블록</div>
+      <div class="box">2번째 블록</div>
+    </section>
+    <script>
+      var count = 2;
+      window.onscroll = () => {
+        if (
+          window.innerHeight + window.scrollY + 1 >
+          document.body.offsetHeight
+        ) {
+          var toAdd = document.createElement('div');
+          toAdd.classList.add('box');
+          toAdd.textContent = `${++count} 번째 블록`;
+          document.querySelector('section').appendChild(toAdd);
+        }
+      };
+    </script>
+  </body>
+</html>
