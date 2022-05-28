@@ -1,5 +1,6 @@
 # Infinite Scroll 
 
+
 ### 1. Vanilla JS로 구현
 
 `목표`
@@ -48,3 +49,163 @@ var count = 2;
         }
       };
 ```
+
+### 2. Infinite Scroll - 리액트로 구현 
+* redux-saga 를 통한 무한 스크롤 하는 방법
+
+`loadPostRequests()` 액션 생성 함수를 호출하면 게시물을 가져오는 로직
+
+
+1. Home Page에서 컴포넌트가 마운트 되면 우선 정보를 한번 가져온다. 
+   * 무한 스크롤 하지 않아도 기존에 있어야 하는 정보가 필요하기 때문
+   * 처음에는 데이터가 비어있다. 
+   
+* Home.jsx
+```
+useEffect(()=>{
+   dispatch(loadPostRequest()); 
+},[]);
+
+// 처음에는 게시글이 비어있을 것임
+const {mainPosts} = useSelector((state)=> state.post);
+return(
+   <>
+      {mainPosts.map((post)=> <PostCard key={post.id} post={post} />)}
+   </>
+) 
+```
+
+
+2. 데이터를 불러와서 전역적으로 관리하는 역할
+* reducer/post.js
+
+```
+initialState = {
+   mainPosts = [];
+   hasMorePosts : true;  // hasMorePost 가 false 면 가져오려는 시도 X, 초기에는 true
+   loadPostsLoading = false; 
+   loadPostsSuccess = false; 
+   loadPostsFailure = null; 
+}
+
+switch (action.type) {
+   case LOAD_POSTS_REQUEST:
+      draft.loadPostsLoading = true;
+      draft.loadPostsDone = false;
+      draft.loadPostsError = null; 
+      break;  
+   case LOAD_POSTS_SUCCESS:
+      draft.loadPostsLoading = false;
+      draft.loadPostsDone = true;
+      draft.mainPosts = action.data.concat(draft.mainPosts); // 응답 이후, 기존에 있던 것과 합치기
+      draft.hasMorePosts = draft.mainPosts.length < 50; // 50개 보다 적으면 true, 많으면 false(더이상 안가져오겠다. 50개까지만 로딩)
+      break; 
+   case LOAD_POSTS_FAILURE:
+      draft.loadPostsLoading = false;
+      draft.loadPostsDone = false;
+      draft.loadPostsError = null;
+      break; 
+}
+```
+
+* saga/posts.js
+```
+하던 대로 그대로
+```
+
+3. 스크롤이 아래로 내려질 때마다, 데이터 가져오기 
+
+* 주의 할 것! 
+   * useEffect에서 window.addEventListener 할 때 주의해야 할 점 : 
+   `return () => window.removeEventListener` 해줘야 한다. <br/> 
+     안하면 메모리에 쌓여있는다. 
+     
+    
+* 얼마나 위에서 부터 내렸는지 px 값: `window.ScrollY`
+      
+* 현재 유저가 보고있는 윈도우 창의 Height: `document.document.clientHeight` 
+
+* 현재 있는 모든 요소들의 총 Height : `document.document.scrollHeight`
+
+* Home.jsx
+```
+
+
+// 처음에는 게시글이 비어있을 것임
+const {mainPosts} = useSelector((state)=> state.post);
+const {hasMorePosts} = useSelector((state)=> state.post);
+
+
+// 처음 데이터를 불러오는 로직
+useEffect(()=>{
+   dispatch(loadPostRequest()); 
+},[]);
+
+// 스크롤이 내려갈 때마다 데이터를 불러오는 로직
+useEffect(()=>{
+   function onScroll(){
+      console.log(
+      '얼마나 위에서 부터 내렸는지 px 값', window.ScrollY, 
+      '현재 유저가 보고있는 윈도우 창의 Height: ', document.document.clientHeight, 
+      '현재 있는 모든 요소들의 총 Height', document.document.scrollHeight
+      ); 
+      if (window.scrollY + document.document.clientHeight === document.document.scrollHeight){
+        if(hasMorePosts) { 
+            dispatch(loadPostRequest()); // 다 내리면 새로운거 로딩
+        }
+      }
+   }
+   window.addEventListener('scroll', onScroll);
+   return ()=>{
+      window.removeEventListener('scroll',onScroll); 
+   } 
+},[hasMorePosts]);
+
+
+return(
+   <>
+      {mainPosts.map((post)=> <PostCard key={post.id} post={post} />)}
+   </>
+) 
+```
+
+⭐ 실무에서는 완전히 아래까지 내리기 이전에 로딩을 해주는 로직을 추구한다. 
+
+1. 조건문을 바꾼다. 전체 콘텐츠 화면의 300px 위에까지 왔을 때, 데이터를 로딩
+
+```
+if (window.scrollY + document.document.clientHeight > document.document.scrollHeight - 300){
+        if(hasMorePosts) { 
+            dispatch(loadPostRequest()); // 다 내리면 새로운거 로딩
+        }
+      }
+```
+
+* 문제점 : `document.document.scrollHeight - 300` 보다 값이 클 때, 여러번 dispatch 하게 된다. 
+
+2. saga에서 해결해준다. 
+
+* 1. throttle 을 사용
+    * 5초 동안은 다른 request들을 모두 무시하도록 설정
+    ```
+    function* watchLoadPosts(){
+        yield throttle(5000, LOAD_POSTS_REQUEST, loadPosts);
+    }
+  ```
+  
+[문제점] : 5초는 지키지만, 앞에 요청들을 취소해 주지는 않는다.
+=> 응답을 차단하는 것이지, 요청을 차단시켜주지는 못한다. 
+
+* 2. loadPostsLoading 을 통해 조작하여 한번의 요청만 보낸다. 
+
+    * loading이 아닐때만 실행한다. 
+    * loading이 true이면 이미 한번 요청이 가고 있는 상태니까, loading 을 활용하여 한번의 요청만 보낸다. 
+    
+```
+if (window.scrollY + document.document.clientHeight > document.document.scrollHeight - 300){
+        if(hasMorePosts && !loadPostsLoading) { 
+            dispatch(loadPostRequest()); // 다 내리면 새로운거 로딩
+        }
+      }
+```
+### 3. Reverse Infinite Scroll - 리액트로 구현
