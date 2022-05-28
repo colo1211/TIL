@@ -230,3 +230,80 @@ passport.deserializeUser(function (아이디, done) {
     })
 }); 
 ```
+
+# 검색기능 만들기
+
+### 1. URL query string (URL 쿼리 스트링)
+
+1. 검색버튼 누르면 서버에게 요청
+2. 서버는 DB에서 데이터를 꺼내줌
+
+* 원래 서버에 데이터를 보내기 위해서는 원래는 `POST` 요청을 사용해야 함 
+    1. 검색 input에 입력 
+    2. 검색 버튼을 클릭하면 POST 요청
+![image](https://user-images.githubusercontent.com/63600953/167833351-99461f78-2521-40dc-a959-b71c940568cd.png)
+       
+* GET 요청을 통해서 서버에 데이터를 보낼 수 있는 방법이 존재 <br/>
+  => `query string` : URL 뒤에 몰래 서버에 정보를 전달하는 방법
+  * GET 요청 = URL만 잘 작성해서 보내면 끝
+
+![image](https://user-images.githubusercontent.com/63600953/167833747-6e840e51-dd76-4641-9e09-cd3085442997.png)
+
+* 토마토를 검색했을 때 사용될 수 있는 query string
+* 데이터를 전달하기 위해서는 query string을 통해서 GET 요청을 보낸다. 
+    * URL을 입력하는 것 자체가 GET 요청을 보내는 행위
+    
+
+##### 만약 '어린이날' 이라고 입력한다면, 
+`Front/list.ejs`
+```
+    <div class="container input-group mt-4 mb-2">
+      <input class="form-control" id="search-input"/>
+      <button class="input-group-append btn btn-danger" id="search">검색</button>
+    </div>
+    
+    <script>
+      $('#search').click(function(e){
+        var text = $('#search-input').val(); // 입력한 값을 가져옴
+        window.location.replace(`/search?value=${text}`); // GET 요청 보내기, text='어린이날'
+    </script>
+```
+
+* window.location.replace(URL 주소) <br/>
+: "URL 창에 안에 있는 주소로 갈아치워주세요" `=>` GET 요청을 보내는 것과 동일한 로직
+
+* URL 주소 <br/>
+: `/url?전달데이터이름=전달값` 으로 백에게 전달해주면, 백에서는 '/url'에서 get요청을 받아서, `req.query.이름`으로 다음 값을 조회할 수 있다.  
+  
+
+
+
+`Back/server.js` 에서 app.get('/search',function(req,res){});
+* req.query 로 프론트에서 요청한 값을 전달 받을 수 있다.
+    * 아래와 같은 방식으로 진행하게 되면, '이닦기'라고 검색하면 정말 '이닦기'에 대한 결과 밖에 뜨질 않는다.
+    <br/>ex) 만약 내가 '이' 라고 검색해도 '이닦기' 에 대한 결과는 얻을 수 없는 것이다.  
+```
+app.get('/search', function(req,res){
+    console.log(req.query); // value='어린이날'
+    db.collection('post').find({title:req.query.value}).toArray(function(err,result){
+        res.render('/search.ejs', {posts : result}); 
+    })
+}); 
+```
+
+### 2. 게시물이 많을 때는, indexing 개념을 도입하여 사용
+
+해결방안 <br/>
+1. 정규식을 쓰면 해결이 가능하다. 
+    * 정규식 : 문자를 검사하는 식 <br/> 
+        * abc 가 포함된 모든 문자
+        ```
+            /abc/ 
+        ```
+2. 인덱싱을 활용한 검색
+    * 인덱싱 : DB에서 제공하는 `Binary Search(이진 탐색)` 기반의 인덱싱 기능 활용
+        * 인덱싱을 활용하기 위해서는 미리 모든 항목들이 숫자순으로 정렬이 되어 있어야 한다.
+        * 몽고디비에는 id를 기준으로 오름차순으로 정렬되어 있다.
+        * 우리는 `제목` 순으로 정렬되어 있어야 한다.   
+            ![image](https://user-images.githubusercontent.com/63600953/168032560-b20e75e2-12d7-4129-9240-af14d1bc386a.png)
+        
