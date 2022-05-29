@@ -11,18 +11,18 @@
    
 ####  무한스크롤을 구현하기 위해서 사용할 객체의 속성 3가지 
 
-1. `window.innerHeight` => 보고있는 부분의 총 height
+1. `window.innerHeight` => 보고있는 부분의 총 height (고정된 값)
 
     * 브라우저에서 실제로 표시되고 있는 영역의 높이
     * 사용자가 실제로 보고있는 영역의 높이
 
 
-2. `window.scrollY` => 0부터 시작해서 얼마나 마우스 내렸는지 px
+2. `window.scrollY` => 0부터 시작해서 얼마나 마우스 내렸는지 px (변경되는 값)
     * 스크롤이 세로로 얼마나 이동했는지를 px 로 나타낸다. 
     * 0부터 시작해서 스크롤을 내릴수록 증가하는 값
     
 
-3. `document.body.offsetHeight` => 모든 컨텐츠들의 height 총 합
+3. `document.body.offsetHeight` => 모든 컨텐츠들의 height 총 합 (고정된 값)
     * offsetHeight : 요소의 실제 높이
     * 요소의 실제 높이 = 보이는 영역 + 가려진 영역
     * 실제 모든 콘텐츠들에게 주어진 height 값을 모두 합친 값
@@ -208,4 +208,19 @@ if (window.scrollY + document.document.clientHeight > document.document.scrollHe
         }
       }
 ```
-### 3. Reverse Infinite Scroll - 리액트로 구현
+### 3. Reverse Infinite Scroll 
+* 채팅 무한 스크롤을 구현하기 위한 리버스 인피니트 스크롤링
+
+참고) [리버스 인피니트 스크롤링](https://velog.io/@heyoon/%EC%97%AD%EB%B0%A9%ED%96%A5-%EB%AC%B4%ED%95%9C%EC%8A%A4%ED%81%AC%EB%A1%A4-%EA%B5%AC%ED%98%84)
+
+
+* 의사코드 
+1. scrollTop = 0 이 되면, 현재의 scrollHeight 를 저장
+2. 새로운 데이터를 불러온다.  `Redux-Saga` 
+3. 새로운 데이터를 불러온 이후 <br/>
+   ```
+   (새로운 데이터를 불러온 후의 scrollHeight) - (데이터를 불러오기 이전에 저장했던 scrollHeight)
+   ```
+   의 값을 scrollTop에 넣어서 보고있던 스크롤 위치를 유지시킨다. 
+
+![Whiteboard (4)](https://user-images.githubusercontent.com/63600953/170866288-e678d6cd-955f-4469-ad9a-6d3d7fd31dae.png)
