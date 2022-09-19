@@ -39,11 +39,12 @@ var 함수 = a => {return a + 10}
 var 함수 = a => a + 10
 ```
 
-> Arrow Function 사용 예시
+> Arrow Function + this
 
-1. Arrow Function은 함수 내의 this 값을 변경시키지 않는다.
-2. 바깥에 있던 this값을 내부에서 그대로 사용한다. (window)
+`Lexical this` : 상위 환경의 this를 계승받는다
 
+1. Arrow Function은 함수 내의 this 값을 변경시키지 않는다. => 
+2. 바깥에 있던 this 값을 내부에서 그대로 사용한다.
 
 1. forEach 콜백 함수
 ```
