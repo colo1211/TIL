@@ -1,5 +1,3 @@
-# Part 1
-
 ## this 란?
 
 > 1. window <br/>
